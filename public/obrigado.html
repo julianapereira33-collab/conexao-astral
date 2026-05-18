@@ -1,328 +1,270 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compra Confirmada — Conexão Astral</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    :root{
-        --bg:#0D0720;--bg2:#130A28;--card:#1C1035;--border:#2E1858;
-        --lilac:#C084FC;--violet:#7C3AED;--gold:#F5C842;--rose:#F472B6;
-        --green:#22C55E;--t1:#FFFFFF;--t2:#F0E8FF;--t3:#C4B5D8;--t4:#6B5A80;
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compra Confirmada &#8212; Conexao Astral</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{--bg:#0D0720;--h2:#130A28;--card:#1C1035;--border:#2E1858;--lilac:#C084FC;--violet:#7C3AED;--gold:#F5C842;--rose:#F472B6;--green:#22c55e}
+body{background:var(--bg);color:#fff;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+.confirm-bar{background:#16a34a;text-align:center;padding:14px 20px;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px}
+.confirm-icon{width:28px;height:28px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#16a34a;font-size:16px;font-weight:900;flex-shrink:0}
+.steps-wrap{background:var(--h2);padding:24px 20px;display:flex;justify-content:center}
+.steps{display:flex;align-items:center;gap:0;max-width:500px;width:100%}
+.step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.step-num{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;margin-bottom:6px;z-index:1}
+.step.done .step-num{background:#16a34a;color:#fff}
+.step.active .step-num{background:var(--violet);color:#fff}
+.step.pending .step-num{background:#2D1854;color:#6B5B85}
+.step-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px}
+.step.done .step-label{color:#22c55e}
+.step.active .step-label{color:var(--lilac)}
+.step.pending .step-label{color:#4A3570}
+.step-line{flex:1;height:2px;margin-bottom:22px}
+.step-line.done{background:#16a34a}
+.step-line.pending{background:#2D1854}
+.main-wrap{max-width:680px;margin:0 auto;padding:36px 20px 60px}
+.why-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:32px}
+.why-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.why-sub{font-size:13px;color:#9B87B0;margin-bottom:20px}
+.why-item{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.why-item:last-child{border-bottom:none;padding-bottom:0}
+.why-ico{font-size:22px;flex-shrink:0;margin-top:2px}
+.why-item strong{display:block;font-size:14px;font-weight:700;margin-bottom:3px}
+.why-item span{font-size:13px;color:#9B87B0;line-height:1.5}
+.form-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:28px}
+.form-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:6px}
+.form-sub{font-size:14px;color:#9B87B0;margin-bottom:24px}
+.field-group{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:600;color:var(--lilac);margin-bottom:7px}
+.field-hint{display:block;font-size:11px;color:#6B5B85;margin-bottom:7px}
+.field-input{width:100%;background:var(--h2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;color:#fff;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+.field-input:focus{border-color:var(--violet)}
+.field-input::placeholder{color:#3D2E60}
+.hora-opts{display:flex;flex-direction:column;gap:10px}
+.hora-opt{display:flex;align-items:center;gap:12px;background:var(--h2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .2s,background .2s}
+.hora-opt:hover{border-color:var(--violet)}
+.hora-opt.selected{border-color:var(--lilac);background:#1B0E3D}
+.hora-opt-dot{width:18px;height:18px;border-radius:50%;border:2px solid #4A3570;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .2s}
+.hora-opt.selected .hora-opt-dot{border-color:var(--lilac);background:var(--lilac)}
+.hora-opt-dot::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff;display:none}
+.hora-opt.selected .hora-opt-dot::after{display:block}
+.hora-opt-txt strong{display:block;font-size:14px;margin-bottom:2px}
+.hora-opt-txt span{font-size:12px;color:#9B87B0}
+.hora-exata-wrap{margin-top:14px;display:none}
+.btn-submit{width:100%;background:linear-gradient(135deg,#7C3AED,#C084FC);color:#fff;font-size:16px;font-weight:700;padding:18px;border-radius:100px;border:none;cursor:pointer;margin-top:24px;box-shadow:0 6px 24px rgba(124,58,237,.4);transition:transform .2s,box-shadow .2s}
+.btn-submit:hover{transform:translateY(-2px)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.upsell-box{display:none;background:linear-gradient(135deg,#12082A,#1B0E3D);border:2px solid var(--gold);border-radius:20px;padding:28px;margin-top:32px;text-align:center}
+.upsell-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,200,66,.15);border:1px solid rgba(245,200,66,.4);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--gold);margin-bottom:16px}
+.upsell-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;line-height:1.2;margin-bottom:12px}
+.upsell-sub{font-size:14px;color:#C4B5D8;line-height:1.55;margin-bottom:20px}
+.upsell-preco{margin-bottom:20px}
+.upsell-old{font-size:13px;color:#6B5B85;text-decoration:line-through;margin-bottom:4px}
+.upsell-new{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--gold)}
+.btn-upsell{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff;font-size:15px;font-weight:700;padding:16px 36px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;box-shadow:0 6px 24px rgba(245,158,11,.4);transition:transform .2s;margin-bottom:10px}
+.btn-upsell:hover{transform:translateY(-2px)}
+.btn-skip{display:block;font-size:13px;color:#6B5B85;text-decoration:underline;cursor:pointer;margin-top:8px;background:none;border:none}
+.success-msg{display:none;text-align:center;padding:20px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:14px;margin-top:16px}
+.success-msg p{color:#22c55e;font-weight:600;font-size:15px}
+</style>
+</head>
+<body>
+<div class="confirm-bar">
+<div class="confirm-icon">&#10003;</div>
+Compra confirmada! Agora precisamos dos seus dados para gerar seu mapa
+</div>
+<div class="steps-wrap">
+<div class="steps">
+<div class="step done">
+<div class="step-num">&#10003;</div>
+<div class="step-label">Pagamento</div>
+</div>
+<div class="step-line done"></div>
+<div class="step active">
+<div class="step-num">2</div>
+<div class="step-label">Seus Dados</div>
+</div>
+<div class="step-line pending"></div>
+<div class="step pending">
+<div class="step-num">3</div>
+<div class="step-label">Seu Mapa</div>
+</div>
+</div>
+</div>
+<div class="main-wrap">
+<div class="why-box">
+<p class="why-title">&#127306; Por que os dados precisam ser exatos?</p>
+<p class="why-sub">Cada minuto e cidade fazem seu mapa ser &#250;nico &#8212; confira o impacto de cada informa&#231;&#227;o:</p>
+<div class="why-item">
+<span class="why-ico">&#9200;</span>
+<div>
+<strong>Hor&#225;rio de nascimento &#8594; define seu Ascendente</strong>
+<span>O Ascendente muda a cada 2 horas. Ele revela como o mundo te enxerga, sua apar&#234;ncia, personalidade social e como voc&#234; entra nos ambientes.</span>
+</div>
+</div>
+<div class="why-item">
+<span class="why-ico">&#127968;</span>
+<div>
+<strong>Cidade natal &#8594; define as 12 Casas Astrol&#243;gicas</strong>
+<span>As Casas mudam conforme a latitude e longitude. S&#227;o Paulo e Belo Horizonte geram Casas completamente diferentes, mesmo nascendo no mesmo momento.</span>
+</div>
+</div>
+<div class="why-item">
+<span class="why-ico">&#9728;</span>
+<div>
+<strong>Data de nascimento &#8594; Lua e planetas</strong>
+<span>A Lua muda de signo a cada 2,5 dias. Um dia de diferen&#231;a pode mudar toda a interpreta&#231;&#227;o emocional do seu mapa.</span>
+</div>
+</div>
+</div>
+<div class="form-box">
+<h2 class="form-title">Confirme seus dados de nascimento</h2>
+<p class="form-sub">Voc&#234; pode corrigir qualquer informa&#231;&#227;o aqui antes de gerar o mapa.</p>
+<div class="field-group">
+<label class="field-label" for="fNome">Seu nome</label>
+<input class="field-input" type="text" id="fNome" placeholder="Como voc&#234; quer ser chamada no mapa">
+</div>
+<div class="field-group">
+<label class="field-label" for="fEmail">Seu e-mail</label>
+<span class="field-hint">O mapa PDF ser&#225; enviado para este e-mail</span>
+<input class="field-input" type="email" id="fEmail" placeholder="voce@email.com">
+</div>
+<div class="field-group">
+<label class="field-label" for="fData">Data de nascimento</label>
+<input class="field-input" type="date" id="fData">
+</div>
+<div class="field-group">
+<label class="field-label" for="fCidade">Cidade de nascimento</label>
+<span class="field-hint">Cidade + estado/pa&#237;s (ex: S&#227;o Paulo, SP ou Lisboa, Portugal)</span>
+<input class="field-input" type="text" id="fCidade" placeholder="Cidade, Estado">
+</div>
+<div class="field-group">
+<label class="field-label">Hora de nascimento</label>
+<div class="hora-opts" id="horaOpts">
+<div class="hora-opt" data-val="exata">
+<div class="hora-opt-dot"></div>
+<div class="hora-opt-txt">
+<strong>Sei a hora exata</strong>
+<span>Tenho na certid&#227;o ou lembro com certeza</span>
+</div>
+</div>
+<div class="hora-opt" data-val="aprox">
+<div class="hora-opt-dot"></div>
+<div class="hora-opt-txt">
+<strong>Sei aproximadamente</strong>
+<span>Manh&#227;, tarde, noite &#8212; vou informar o melhor poss&#237;vel</span>
+</div>
+</div>
+<div class="hora-opt selected" data-val="nao">
+<div class="hora-opt-dot"></div>
+<div class="hora-opt-txt">
+<strong>N&#227;o sei a hora</strong>
+<span>Tudo bem &#8212; usaremos 12:00 e seu mapa ser&#225; gerado normalmente</span>
+</div>
+</div>
+</div>
+<div class="hora-exata-wrap" id="horaExataWrap">
+<label class="field-label" for="fHora">Hora de nascimento</label>
+<input class="field-input" type="time" id="fHora">
+</div>
+</div>
+<button class="btn-submit" id="btnSubmit">&#127775; GERAR MEU MAPA ASTRAL</button>
+<div class="success-msg" id="successMsg">
+<p>&#10004; Dados enviados! Seu mapa est&#225; sendo gerado e ser&#225; enviado para o seu e-mail em at&#233; 10 minutos.</p>
+</div>
+</div>
+<div class="upsell-box" id="upsellBox">
+<div class="upsell-badge">&#10024; Oferta exclusiva p&#243;s-compra</div>
+<h3 class="upsell-title">Adicione o Mapa de Compatibilidade Amorosa</h3>
+<p class="upsell-sub">Descubra com quem voc&#234; &#233; astrologicamente compat&#237;vel, como se relacionar melhor e quais signos potencializam sua energia. Gerado junto com seu mapa, entregue no mesmo e-mail.</p>
+<div class="upsell-preco">
+<p class="upsell-old">De R$ 47,00</p>
+<p class="upsell-new">+ R$ 17,90</p>
+</div>
+<a class="btn-upsell" href="LINK_CAKTO_UPSELL_1790" target="_blank">&#9889; SIM, QUERO ADICIONAR &#8212; R$ 17,90</a>
+<button class="btn-skip" id="btnSkip">N&#227;o, obrigada. Quero apenas o mapa astral.</button>
+</div>
+</div>
+<script>
+var horaConhecimento = "nao";
+var horaOpts = document.querySelectorAll("#horaOpts .hora-opt");
+horaOpts.forEach(function(opt) {
+  opt.addEventListener("click", function() {
+    horaOpts.forEach(function(o) { o.classList.remove("selected"); });
+    opt.classList.add("selected");
+    horaConhecimento = opt.getAttribute("data-val");
+    if (horaConhecimento === "exata" || horaConhecimento === "aprox") {
+      document.getElementById("horaExataWrap").style.display = "block";
+    } else {
+      document.getElementById("horaExataWrap").style.display = "none";
+      document.getElementById("fHora").value = "";
     }
-    body{background:var(--bg);color:var(--t1);font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-
-    /* SUCCESS BANNER */
-    .success-banner{background:linear-gradient(90deg,#15803D,#16A34A,#15803D);text-align:center;padding:16px 20px;font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px}
-    .success-banner .check{width:28px;height:28px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#16A34A;font-size:16px;font-weight:900;flex-shrink:0}
-
-    /* STEPS */
-    .steps-wrap{background:#130A28;border-bottom:1px solid #2E1858;padding:20px 24px}
-    .steps{display:flex;align-items:center;justify-content:center;gap:0;max-width:560px;margin:0 auto}
-    .step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
-    .step-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:2px solid}
-    .step-circle.done{background:#22C55E;border-color:#22C55E;color:#fff}
-    .step-circle.active{background:linear-gradient(135deg,#A855F7,#7C3AED);border-color:#A855F7;color:#fff;box-shadow:0 0 16px #7C3AED80}
-    .step-circle.pending{background:transparent;border-color:#3B2070;color:#6B5A80}
-    .step-label{font-size:10px;font-weight:600;color:#B89FD0;letter-spacing:.5px;text-align:center;text-transform:uppercase}
-    .step-line{flex:1;height:2px;background:#2E1858;margin-bottom:18px}
-    .step-line.done{background:linear-gradient(90deg,#22C55E,#A855F7)}
-
-    /* MAIN CONTENT */
-    .main{max-width:680px;margin:0 auto;padding:40px 24px 60px}
-
-    /* WHY ACCURATE */
-    .why-box{background:#140830;border:1px solid #2E1858;border-radius:18px;padding:24px 22px;margin-bottom:32px}
-    .why-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-    .why-sub{font-size:13px;color:#B89FD0;margin-bottom:18px;line-height:1.6}
-    .why-items{display:grid;gap:10px}
-    .wi{display:flex;gap:12px;align-items:flex-start;background:#1B0E3D;border:1px solid #2E1858;border-radius:12px;padding:14px 16px}
-    .wi-ico{font-size:20px;flex-shrink:0;margin-top:1px}
-    .wi-txt strong{display:block;font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
-    .wi-txt span{font-size:12px;color:#B89FD0;line-height:1.55}
-
-    /* FORM */
-    .form-card{background:#140830;border:2px solid #A855F7;border-radius:20px;padding:30px 24px;margin-bottom:28px}
-    .form-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;text-align:center}
-    .form-sub{font-size:13px;color:#B89FD0;text-align:center;margin-bottom:24px;line-height:1.6}
-    .form-row{display:grid;gap:14px;margin-bottom:14px}
-    .form-row.two{grid-template-columns:1fr 1fr}
-    .form-group{display:flex;flex-direction:column;gap:6px}
-    .form-label{font-size:12px;font-weight:700;color:#C084FC;letter-spacing:.5px;text-transform:uppercase}
-    .form-input{background:#0D0720;border:2px solid #3B2070;border-radius:11px;padding:13px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .25s,background .25s;width:100%}
-    .form-input::placeholder{color:#7A5FA0}
-    .form-input:focus{border-color:#A855F7;background:#130A28}
-    .form-input.prefilled{border-color:#22C55E;background:#0A1F0A;color:#86EFAC}
-    .hora-group{display:grid;gap:8px}
-    .hora-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .hora-opt{background:#0D0720;border:2px solid #3B2070;border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;transition:all .2s}
-    .hora-opt:hover{border-color:#A855F7;background:#130A28}
-    .hora-opt.sel{border-color:#A855F7;background:#250F50}
-    .hora-opt span{font-size:11px;color:#B89FD0;display:block;line-height:1.4;font-weight:500}
-    .hora-opt.sel span{color:#E8D5FF}
-    .hora-exact{display:none;margin-top:8px}
-    .hora-exact.show{display:block}
-    .btn-submit{display:block;width:100%;background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;border:none;border-radius:13px;padding:18px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;text-align:center;transition:transform .2s,box-shadow .25s;margin-top:20px;animation:glow-btn 2.5s ease-in-out infinite}
-    .btn-submit:hover{transform:translateY(-2px);box-shadow:0 14px 36px #5B21B6}
-    .btn-submit:disabled{opacity:.5;animation:none;cursor:not-allowed;transform:none}
-    .form-note{font-size:11px;color:#6B5A80;text-align:center;margin-top:10px;line-height:1.5}
-
-    /* SUCCESS STATE */
-    .sent-box{display:none;text-align:center;padding:20px 0}
-    .sent-box.show{display:block}
-    .sent-ico{font-size:56px;margin-bottom:12px}
-    .sent-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#22C55E;margin-bottom:8px}
-    .sent-desc{font-size:14px;color:#B89FD0;line-height:1.7}
-
-    /* UPSELL MODAL */
-    .modal-overlay{position:fixed;inset:0;background:#0D0720EE;z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
-    .modal-overlay.show{display:flex}
-    .modal{background:#140830;border:2px solid #A855F7;border-radius:22px;padding:32px 26px;max-width:500px;width:100%;text-align:center;position:relative;animation:fadeUp .5s ease}
-    .modal-close{position:absolute;top:14px;right:18px;font-size:22px;color:#6B5A80;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;line-height:1}
-    .modal-close:hover{color:#fff}
-    .modal-badge{display:inline-block;background:var(--rose);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 18px;border-radius:100px;margin-bottom:16px}
-    .modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:14px}
-    .modal-items{text-align:left;margin-bottom:18px}
-    .mi{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #1B0E3D;font-size:13px;color:#E8D5FF;line-height:1.5}
-    .mi:last-child{border:none}
-    .mi-ck{color:#C084FC;font-size:15px;flex-shrink:0;margin-top:1px}
-    .modal-price{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--lilac);margin-bottom:4px}
-    .modal-price sup{font-size:16px;vertical-align:super}
-    .modal-pix{font-size:12px;color:#B89FD0;margin-bottom:18px}
-    .btn-upsell{display:block;width:100%;background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;border:none;border-radius:13px;padding:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;margin-bottom:10px;animation:glow-btn 2.5s ease-in-out infinite}
-    .btn-skip{font-size:12px;color:#6B5A80;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;text-decoration:underline}
-    .btn-skip:hover{color:#B89FD0}
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes glow-btn{0%,100%{box-shadow:0 0 0 0 #7C3AED80}50%{box-shadow:0 0 0 12px #7C3AED00}}
-    @media(max-width:500px){.form-row.two{grid-template-columns:1fr}.steps{gap:0}.step-label{font-size:9px}}
-    </style>
-  </head>
-  <body>
-
-    <!-- SUCCESS BANNER -->
-    <div class="success-banner">
-        <div class="check">✓</div>div>
-        Compra confirmada! Agora precisamos dos seus dados para gerar seu mapa
-    </div>div>
-
-    <!-- STEPS -->
-    <div class="steps-wrap">
-        <div class="steps">
-              <div class="step">
-                      <div class="step-circle done">✓</div>div>
-                      <div class="step-label">Pagamento</div>div>
-              </div>div>
-              <div class="step-line done"></div>div>
-              <div class="step">
-                      <div class="step-circle active">2</div>div>
-                      <div class="step-label">Seus Dados</div>div>
-              </div>div>
-              <div class="step-line"></div>div>
-              <div class="step">
-                      <div class="step-circle pending">3</div>div>
-                      <div class="step-label">Seu Mapa</div>div>
-              </div>div>
-        </div>div>
-    </div>div>
-
-    <!-- MAIN -->
-    <div class="main">
-
-        <!-- WHY ACCURATE -->
-        <div class="why-box">
-              <div class="why-title">🔮 Por que os dados precisam ser exatos?</div>div>
-              <div class="why-sub">Cada minuto e cidade fazem seu mapa ser único — confira o impacto de cada informação:</div>div>
-              <div class="why-items">
-                      <div class="wi">
-                                <div class="wi-ico">⏰</div>div>
-                                <div class="wi-txt">
-                                            <strong>Horário de nascimento → define seu Ascendente</strong>
-                                          <span>O Ascendente muda a cada 2 horas. Ele revela como o mundo te enxerga, sua aparência, personalidade social e como você entra nos ambientes.</span>
-                                </div>div>
-                      </div>div>
-                    <div class="wi">
-                            <div class="wi-ico">🌍</div>div>
-                            <div class="wi-txt">
-                                      <strong>Cidade de nascimento → define as 12 Casas Astrológicas</strong>
-                                      <span>As Casas determinam as áreas da sua vida (amor, dinheiro, carreira, família). A mesma data em cidades diferentes gera mapas completamente distintos.</span>
-                            </div>div>
-                    </div>div>
-                    <div class="wi">
-                            <div class="wi-ico">🌙</div>div>
-                            <div class="wi-txt">
-                                      <strong>Data de nascimento → posição da Lua</strong>
-                                      <span>A Lua muda de signo a cada 2,5 dias. Ela governa suas emoções, padrões inconscientes e sua relação com amor e família.</span>
-                            </div>div>
-                    </div>div>
-              </div>div>
-        </div>div>
-    
-      <!-- DATA FORM -->
-      <div class="form-card" id="formCard">
-          <div class="form-title">✨ Complete seus dados para o mapa</div>div>
-          <div class="form-sub">Já preenchemos o que temos do seu pedido. Confirme e adicione o restante:</div>div>
-      
-          <form id="mapaForm" onsubmit="submitForm(event)">
-                <div class="form-row two">
-                        <div class="form-group">
-                                  <label class="form-label">Nome completo</label>label>
-                                  <input type="text" id="fNome" class="form-input" placeholder="Seu nome" required>
-                        </div>div>
-                        <div class="form-group">
-                                  <label class="form-label">E-mail</label>label>
-                                  <input type="email" id="fEmail" class="form-input" placeholder="seu@email.com" required>
-                        </div>div>
-                </div>div>
-                <div class="form-row two">
-                        <div class="form-group">
-                                  <label class="form-label">Data de nascimento</label>label>
-                                  <input type="date" id="fData" class="form-input" required>
-                        </div>div>
-                        <div class="form-group">
-                                  <label class="form-label">WhatsApp (opcional)</label>label>
-                                  <input type="tel" id="fPhone" class="form-input" placeholder="(11) 99999-9999">
-                        </div>div>
-                </div>div>
-                <div class="form-row">
-                        <div class="form-group">
-                                  <label class="form-label">Cidade de nascimento</label>label>
-                                  <input type="text" id="fCidade" class="form-input" placeholder="Ex: São Paulo, SP" required>
-                        </div>div>
-                </div>div>
-                <div class="form-group hora-group">
-                        <label class="form-label">Horário de nascimento</label>label>
-                        <div class="hora-opts">
-                                  <div class="hora-opt sel" id="hOpt0" onclick="selectHora(0)">
-                                              <span>Sei o horário exato</span>
-                                  </div>div>
-                                  <div class="hora-opt" id="hOpt1" onclick="selectHora(1)">
-                                              <span>Sei aproximadamente</span>
-                                  </div>div>
-                                  <div class="hora-opt" id="hOpt2" onclick="selectHora(2)">
-                                              <span>Não sei o horário</span>
-                                  </div>div>
-                        </div>div>
-                        <div class="hora-exact show" id="horaExact">
-                                  <input type="time" id="fHora" class="form-input" placeholder="00:00">
-                        </div>
-                </div>div>
-          
-                <button type="submit" class="btn-submit" id="btnSubmit">
-                        🔮 GERAR MEU MAPA ASTRAL AGORA
-                </button>button>
-                <div class="form-note">🔒 Seus dados são protegidos e usados apenas para gerar seu mapa personalizado</div>div>
-          </form>form>
-      
-          <div class="sent-box" id="sentBox">
-                <div class="sent-ico">✨</div>div>
-                <div class="sent-title">Mapa em geração!</div>div>
-                <div class="sent-desc">
-                        Recebemos seus dados com sucesso.<br>
-                        Sua análise completa chegará no e-mail em <strong>até 10 minutos</strong>.<br><br>
-                        Verifique também a caixa de spam caso não encontre.
-                </div>div>
-          </div>div>
-      </div>div>
-    
-    </div>div>
-  
-  <!-- UPSELL MODAL -->
-  <div class="modal-overlay" id="upsellModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeUpsell()">✕</button>button>
-        <div class="modal-badge">✨ Oferta Exclusiva Pós-Compra</div>div>
-        <div class="modal-title">Adicione o Mapa de<br><em style="font-style:italic;background:linear-gradient(135deg,#C084FC,#F472B6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Compatibilidade Amorosa</em>em></div>div>
-        <div class="modal-items">
-              <div class="mi"><div class="mi-ck">★</div>div><div>Análise da conexão entre você e outra pessoa (parceiro, crush ou ex)</div></div>
-              <div class="mi"><div class="mi-ck">★</div><div>Sinastria completa: pontos de atração, desafios e potencial de longo prazo</div></div>
-              <div class="mi"><div class="mi-ck">★</div><div>Vênus e Marte: quem você atrai e quem te atrai de verdade</div></div>
-              <div class="mi"><div class="mi-ck">★</div><div>Entregue junto com seu Mapa Astral no mesmo e-mail</div></div>
-        </div>
-        <div class="modal-price"><sup>R$</sup>17<span style="font-size:24px">,90</span>span></div>
-        <div class="modal-pix">pagamento único — receba junto ao seu mapa</div>
-        <a href="LINK_CAKTO_UPSELL_1790" class="btn-upsell" id="btnUpsell">SIM! QUERO MEU MAPA DE COMPATIBILIDADE</a>a>
-        <button class="btn-skip" onclick="closeUpsell()">Não obrigado, prefiro continuar sem</button>button>
-    </div>
-  </div>
-  
-  <script>
-    // ── PRE-FILL FROM QUIZ DATA ──
-    (function() {
-        try {
-              const dados = JSON.parse(localStorage.getItem('quizDados') || '{}');
-              const params = new URLSearchParams(window.location.search);
-
-              const nome = params.get('nome') || dados.nome || '';
-              const email = params.get('email') || dados.email || '';
-              const phone = params.get('phone') || dados.celular || '';
-              const data = dados.data || '';
-
-              if (nome) { const el = document.getElementById('fNome'); el.value = nome; el.classList.add('prefilled'); }
-              if (email) { const el = document.getElementById('fEmail'); el.value = email; el.classList.add('prefilled'); }
-              if (phone) { const el = document.getElementById('fPhone'); el.value = phone; el.classList.add('prefilled'); }
-        if (data) { const el = document.getElementById('fData'); el.value = data; el.classList.add('prefilled'); }
-        } catch(e) {}
-    })();
-
-    // ── HORA SELECTION ──
-    let horaMode = 0;
-    function selectHora(idx) {
-        horaMode = idx;
-        [0,1,2].forEach(i => document.getElementById('hOpt'+i).classList.remove('sel'));
-                  document.getElementById('hOpt'+idx).classList.add('sel');
-        const exact = document.getElementById('horaExact');
-        exact.classList.toggle('show', idx === 0);
-        if (idx !== 0) document.getElementById('fHora').value = '';
-    }
-
-    // ── SUBMIT ──
-    async function submitForm(e) {
-        e.preventDefault();
-      const btn = document.getElementById('btnSubmit');
-        btn.disabled = true;
-        btn.textContent = 'Enviando...';
-
-        const horaLabels = ['Sei o horário exato', 'Sei aproximadamente', 'Não sei o horário'];
-        const horaVal = horaMode === 0 ? document.getElementById('fHora').value : horaLabels[horaMode];
-
-        const payload = {
-              nome: document.getElementById('fNome').value,
-              email: document.getElementById('fEmail').value,
-              telefone: document.getElementById('fPhone').value,
-              data_nascimento: document.getElementById('fData').value,
-              cidade_nascimento: document.getElementById('fCidade').value,
-              hora_nascimento: horaVal,
-                                                             hora_conhecimento: horaLabels[horaMode]
-        };
-
-        try {
-              await fetch('/api/webhook', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(payload)
-              });
-        } catch(err) {
-              console.error('Webhook error:', err);
-        }
-
-        // Show success
-        document.getElementById('mapaForm').style.display = 'none';
-        document.getElementById('sentBox').classList.add('show');
-
-        // Trigger upsell after 3s
-        setTimeout(() => {
-              document.getElementById('upsellModal').classList.add('show');
-        }, 3000);
-    }
-
-    // ── UPSELL ──
-    function closeUpsell() {
-        document.getElementById('upsellModal').classList.remove('show');
-    }
-  </script>
-  </body>
+  });
+});
+function getParam(name) {
+  var params = new URLSearchParams(window.location.search);
+  return params.get(name) || "";
+}
+document.addEventListener("DOMContentLoaded", function() {
+  var nome = getParam("nome");
+  var email = getParam("email");
+  var data = getParam("data");
+  var cidade = getParam("cidade");
+  if (nome) document.getElementById("fNome").value = nome;
+  if (email) document.getElementById("fEmail").value = email;
+  if (data) document.getElementById("fData").value = data;
+  if (cidade) document.getElementById("fCidade").value = cidade;
+});
+document.getElementById("btnSubmit").addEventListener("click", function() {
+  var nome = document.getElementById("fNome").value.trim();
+  var email = document.getElementById("fEmail").value.trim();
+  var data = document.getElementById("fData").value;
+  var cidade = document.getElementById("fCidade").value.trim();
+  var hora = document.getElementById("fHora").value || "12:00";
+  if (!nome) { alert("Por favor, informe seu nome."); return; }
+  if (!email || email.indexOf("@") === -1) { alert("Por favor, informe um e-mail valido."); return; }
+  if (!data) { alert("Por favor, informe sua data de nascimento."); return; }
+  if (!cidade) { alert("Por favor, informe sua cidade de nascimento."); return; }
+  var btn = document.getElementById("btnSubmit");
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
+  var payload = {
+    nome: nome,
+    email: email,
+    data_nascimento: data,
+    cidade_nascimento: cidade,
+    hora_nascimento: hora,
+    hora_conhecimento: horaConhecimento
+  };
+  fetch("/api/webhook", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) {
+    btn.style.display = "none";
+    document.getElementById("successMsg").style.display = "block";
+    setTimeout(function() {
+      document.getElementById("upsellBox").style.display = "block";
+      document.getElementById("upsellBox").scrollIntoView({ behavior: "smooth" });
+    }, 3000);
+  })
+  .catch(function(e) {
+    btn.disabled = false;
+    btn.textContent = "GERAR MEU MAPA ASTRAL";
+    alert("Erro ao enviar. Por favor, tente novamente.");
+  });
+});
+var btnSkip = document.getElementById("btnSkip");
+if (btnSkip) {
+  btnSkip.addEventListener("click", function() {
+    document.getElementById("upsellBox").style.display = "none";
+  });
+}
+</script>
+</body>
 </html>
