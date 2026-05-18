@@ -4,270 +4,513 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Conexao Astral - Descubra Seu Mapa</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0D0720;--lilac:#C084FC;--violet:#7C3AED;--gold:#F5C842;--rose:#F472B6}
 body{background:var(--bg);color:#fff;font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-.topbar{background:linear-gradient(90deg,#5B21B6,#7C3AED,#5B21B6);text-align:center;padding:12px 20px;font-size:13px;font-weight:600;color:#fff}
+.topbar{background:linear-gradient(90deg,#5B21B6,#7C3AED,#5B21B6);text-align:center;padding:12px 20px;font-size:13px;font-weight:600;letter-spacing:.5px}
 .topbar strong{color:var(--gold)}
 .prog-wrap{position:fixed;top:0;left:0;right:0;height:4px;background:#1B0E3D;z-index:200;display:none}
 .prog-bar{height:100%;background:linear-gradient(90deg,#7C3AED,#C084FC,#F472B6);transition:width .5s ease;width:0%}
 .prog-num{position:fixed;top:8px;right:16px;font-size:11px;font-weight:700;color:#B89FD0;z-index:201;display:none}
 .intro{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 24px;text-align:center;position:relative}
-.intro::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,#3B1080 0%,transparent 70%);pointer-events:none}
-.intro>*{position:relative;z-index:1}
-.i-badge{display:inline-flex;align-items:center;gap:8px;background:#1B0E3D;border:1px solid #3B2070;border-radius:100px;padding:8px 20px;font-size:11px;font-weight:700;color:var(--lilac);letter-spacing:2px;text-transform:uppercase;margin-bottom:28px}
-.i-h1{font-family:'Playfair Display',serif;font-size:clamp(32px,5.5vw,58px);font-weight:900;line-height:1.08;color:#fff;margin-bottom:16px}
-.i-h1 em{font-style:italic;background:linear-gradient(135deg,#C084FC,#F472B6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.i-sub{font-size:clamp(15px,2.5vw,18px);color:#E8D5FF;line-height:1.7;max-width:540px;margin:0 auto 24px}
-.hooks{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:540px;margin:0 auto 32px}
-.hook{background:#140830;border:1px solid #3B2070;border-radius:14px;padding:16px;display:flex;gap:12px;align-items:flex-start;text-align:left}
-.hook-ico{font-size:20px;flex-shrink:0}
-.hook-strong{display:block;font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
-.hook-txt{font-size:12px;color:#B89FD0;line-height:1.5}
-.btn-start{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;border:none;border-radius:14px;padding:18px 40px;font-family:'DM Sans',sans-serif;font-size:17px;font-weight:700;cursor:pointer;animation:glow-btn 2.5s ease-in-out infinite}
-.i-trust{margin-top:16px;font-size:12px;color:#7A5FA0}
-.i-trust span{color:#B89FD0}
-.quiz-wrap{display:none;min-height:100vh;align-items:center;justify-content:center;padding:80px 24px 48px}
-.quiz-wrap.active{display:flex}
-.q-box{width:100%;max-width:580px}
-.q-step{font-size:11px;font-weight:700;color:var(--lilac);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
-.q-title{font-family:'Playfair Display',serif;font-size:clamp(20px,3.5vw,30px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px}
-.q-sub{font-size:14px;color:#B89FD0;line-height:1.6;margin-bottom:22px}
-.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-.opt{background:#140830;border:2px solid #3B2070;border-radius:14px;padding:16px 20px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all .2s}
-.opt:hover{border-color:#A855F7;background:#1B0E3D;transform:translateX(4px)}
-.opt.selected{border-color:#C084FC;background:#250F50}
-.opt-emoji{font-size:20px;flex-shrink:0}
-.opt-text{font-size:14px;color:#E8D5FF;font-weight:500;line-height:1.4;flex:1}
-.opt-check{width:22px;height:22px;border-radius:50%;border:2px solid #3B2070;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;transition:all .2s}
-.opt.selected .opt-check{background:#A855F7;border-color:#A855F7;color:#fff}
-.q-input{width:100%;background:#140830;border:2px solid #3B2070;border-radius:12px;padding:15px 18px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:all .25s;margin-bottom:10px;display:block}
-.q-input::placeholder{color:#7A5FA0}
-.q-input:focus{border-color:#A855F7;background:#1B0E3D}
-.q-nav{display:flex;gap:10px;align-items:center;margin-top:4px}
-.btn-back{background:#140830;border:1px solid #3B2070;border-radius:11px;padding:14px 20px;color:#B89FD0;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-next{flex:1;background:linear-gradient(135deg,#A855F7,#7C3AED);border:none;border-radius:11px;padding:15px 24px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;animation:glow-btn 2.5s ease-in-out infinite}
-.btn-next:disabled{opacity:.45;animation:none;cursor:not-allowed}
-.result-wrap{display:none;padding:80px 24px 60px;max-width:640px;margin:0 auto}
-.result-wrap.active{display:block}
-.res-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#F472B6);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px;animation:pulse-av 2s ease-in-out infinite}
-@keyframes pulse-av{0%,100%{box-shadow:0 0 30px #5B21B660}50%{box-shadow:0 0 60px #A855F7AA}}
-.res-name{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#fff;text-align:center;margin-bottom:6px}
-.res-sub{font-size:13px;color:#B89FD0;text-align:center;margin-bottom:18px}
-.planet-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:28px}
-.pchip{background:#1B0E3D;border:1px solid #3B2070;border-radius:100px;padding:6px 14px;font-size:12px;font-weight:600;color:#E8D5FF}
-.pchip strong{color:var(--lilac)}
-.prev-card{background:#140830;border:1px solid #3B2070;border-radius:18px;overflow:hidden;margin-bottom:12px}
-.pc-head{padding:16px 20px;border-bottom:1px solid #1B0E3D;display:flex;align-items:center;gap:12px}
-.pc-ico{width:36px;height:36px;border-radius:10px;background:#250F50;border:1px solid #3B2070;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.pc-title{font-size:14px;font-weight:700;color:#fff}
-.pc-badge{margin-left:auto;background:#250F50;border:1px solid #3B2070;border-radius:100px;padding:3px 10px;font-size:10px;color:var(--lilac);font-weight:700}
-.pc-body{padding:16px 20px}
-.pc-teaser{font-size:13px;color:#E8D5FF;line-height:1.75;position:relative;overflow:hidden;max-height:72px}
-.pc-teaser::after{content:'';position:absolute;left:0;right:0;bottom:0;height:48px;background:linear-gradient(transparent,#140830)}
-.pc-lock{padding:12px 20px;border-top:1px solid #1B0E3D;font-size:12px;color:#7A5FA0;display:flex;align-items:center;gap:6px}
-.pc-lock span{color:var(--lilac);font-weight:700}
-.offer{background:#140830;border:2px solid #A855F7;border-radius:22px;padding:32px 26px;text-align:center;margin-top:20px}
-.offer-tag{display:inline-block;background:var(--rose);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:7px 20px;border-radius:100px;margin-bottom:18px}
-.offer-h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;line-height:1.25;margin-bottom:20px}
-.offer-items{text-align:left;margin-bottom:22px}
-.oi{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #1B0E3D;font-size:13px;color:#E8D5FF;line-height:1.5}
-.oi:last-child{border:none}
-.oi-ck{color:var(--lilac);font-size:15px;flex-shrink:0;margin-top:1px}
-.timer{display:flex;justify-content:center;gap:8px;margin-bottom:14px}
-.tu{background:#09041A;border:1px solid #3B2070;border-radius:10px;padding:11px 16px;min-width:60px;text-align:center}
-.tun{display:block;font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--lilac);line-height:1}
-.tul{font-size:10px;color:#7A5FA0;letter-spacing:1px;text-transform:uppercase}
-.price-from{font-size:14px;color:#7A5FA0;text-decoration:line-through;margin-bottom:4px}
-.price-big{font-family:'Playfair Display',serif;font-size:58px;font-weight:700;color:var(--lilac);line-height:1;margin-bottom:6px}
-.price-big sup{font-size:24px;vertical-align:super}
-.price-cents{font-size:28px}
-.price-pix{background:#1B0E3D;border:1px solid #3B2070;border-radius:10px;padding:11px;font-size:12px;color:var(--lilac);font-weight:600;margin:14px 0 22px}
-.btn-buy{display:block;width:100%;background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;border:none;border-radius:13px;padding:18px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;animation:glow-btn 2.5s ease-in-out infinite}
-.offer-guar{margin-top:14px;font-size:11px;color:#7A5FA0;display:flex;align-items:center;justify-content:center;gap:6px}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes glow-btn{0%,100%{box-shadow:0 0 0 0 #7C3AED80}50%{box-shadow:0 0 0 12px #7C3AED00}}
-@media(max-width:540px){.hooks{grid-template-columns:1fr}.price-big{font-size:46px}}
+.intro::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,.35) 0%,transparent 70%);pointer-events:none}
+.i-badge{display:inline-flex;align-items:center;gap:8px;background:#1B0E3D;border:1px solid #3B2070;border-radius:100px;padding:8px 18px;font-size:12px;font-weight:600;color:#C084FC;margin-bottom:28px;letter-spacing:.5px}
+.i-h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5.5vw,52px);font-weight:900;line-height:1.08;margin-bottom:20px}
+.i-h1 span{background:linear-gradient(135deg,#F5C842,#F472B6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.i-sub{font-size:clamp(15px,2.2vw,18px);color:#C4B5D8;max-width:540px;line-height:1.65;margin-bottom:36px}
+.i-provas{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.i-pv{text-align:center}
+.i-pv strong{display:block;font-family:'Playfair Display',serif;font-size:26px;color:var(--gold)}
+.i-pv span{font-size:11px;color:#9B87B0;text-transform:uppercase;letter-spacing:.8px}
+.btn-start{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#7C3AED,#C084FC);color:#fff;font-size:16px;font-weight:700;padding:18px 42px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;letter-spacing:.3px;box-shadow:0 8px 32px rgba(124,58,237,.5);transition:transform .2s,box-shadow .2s}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(124,58,237,.65)}
+.i-seguro{margin-top:20px;font-size:12px;color:#7A6B90}
+.quiz-wrap{display:none;min-height:100vh;padding:80px 24px 40px;align-items:center;justify-content:center}
+.quiz-box{max-width:600px;width:100%;margin:0 auto}
+.q-step{display:none}
+.q-step.active{display:block}
+.q-num{font-size:11px;font-weight:700;color:#C084FC;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px}
+.q-text{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:700;line-height:1.25;margin-bottom:8px}
+.q-sub{font-size:14px;color:#9B87B0;margin-bottom:32px}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;background:#12082A;border:1.5px solid #2D1854;border-radius:14px;padding:16px 20px;cursor:pointer;transition:border-color .2s,background .2s;text-align:left}
+.opt:hover{border-color:#7C3AED;background:#1B0E3D}
+.opt.selected{border-color:#C084FC;background:#1B0E3D}
+.opt-ico{width:40px;height:40px;border-radius:50%;background:#1B0E3D;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.opt-txt strong{display:block;font-size:15px;font-weight:600;margin-bottom:2px}
+.opt-txt span{font-size:12px;color:#9B87B0}
+.inp-group{margin-bottom:20px}
+.inp-label{display:block;font-size:13px;font-weight:600;color:#C084FC;margin-bottom:8px}
+.inp-field{width:100%;background:#12082A;border:1.5px solid #2D1854;border-radius:12px;padding:14px 18px;color:#fff;font-size:15px;font-family:'DM Sans',sans-serif;transition:border-color .2s;outline:none}
+.inp-field:focus{border-color:#7C3AED}
+.inp-field::placeholder{color:#4A3570}
+.btn-next{margin-top:28px;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#7C3AED,#C084FC);color:#fff;font-size:15px;font-weight:700;padding:15px 36px;border-radius:100px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(124,58,237,.45);transition:transform .2s,box-shadow .2s}
+.btn-next:hover{transform:translateY(-2px)}
+.result-wrap{display:none;min-height:100vh;padding:80px 24px 60px;align-items:center;justify-content:center}
+.result-box{max-width:620px;width:100%;margin:0 auto;text-align:center}
+.r-seal{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#C084FC);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 24px}
+.r-h1{font-family:'Playfair Display',serif;font-size:clamp(24px,4.5vw,38px);font-weight:900;line-height:1.15;margin-bottom:16px}
+.r-sub{font-size:16px;color:#C4B5D8;line-height:1.6;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto}
+.r-card{background:linear-gradient(135deg,#12082A,#1B0E3D);border:1px solid #3B2070;border-radius:20px;padding:28px;margin-bottom:28px;text-align:left}
+.r-card-title{font-size:13px;font-weight:700;color:#C084FC;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.r-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2D1854}
+.r-item:last-child{border-bottom:none}
+.r-item-ico{font-size:20px}
+.r-item-txt strong{display:block;font-size:13px;color:#9B87B0;margin-bottom:2px}
+.r-item-txt span{font-size:15px;font-weight:600}
+.r-preco{margin-bottom:28px}
+.r-preco-old{font-size:14px;color:#6B5B85;text-decoration:line-through;margin-bottom:4px}
+.r-preco-new{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:var(--gold)}
+.r-preco-note{font-size:13px;color:#9B87B0;margin-top:4px}
+.btn-cta{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-size:17px;font-weight:700;padding:20px 48px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;letter-spacing:.3px;box-shadow:0 8px 32px rgba(22,163,74,.5);transition:transform .2s,box-shadow .2s;width:100%;justify-content:center;max-width:420px}
+.btn-cta:hover{transform:translateY(-2px)}
+.r-garantia{margin-top:20px;font-size:12px;color:#7A6B90}
+.r-stars{color:#F5C842;font-size:20px;letter-spacing:4px;margin-bottom:8px}
+.r-testemunho{background:#12082A;border:1px solid #2D1854;border-radius:16px;padding:20px;margin-bottom:12px;text-align:left}
+.r-test-txt{font-size:14px;color:#C4B5D8;line-height:1.55;font-style:italic;margin-bottom:12px}
+.r-test-name{font-size:13px;font-weight:600;color:#C084FC}
+.stars-sm{color:#F5C842;font-size:13px}
+@media(max-width:480px){.i-provas{gap:20px}.btn-start{padding:16px 32px;font-size:15px}.btn-cta{padding:18px 32px;font-size:16px}}
 </style>
 </head>
 <body>
-<div class="topbar">Mais de <strong>52.000 almas</strong> ja descobriram o que estava escrito nas estrelas</div>
+
+<div class="topbar">&#11088; Mais de <strong>3.847 mapas</strong> entregues &#8212; Entrega em at&#233; 10 minutos</div>
+
+<section class="intro" id="secIntro">
+  <span class="i-badge">&#127775; Mapa Astral + Numerologia Pessoal</span>
+  <h1 class="i-h1">Descubra o que os <span>astros revelam</span> sobre voc&#234;</h1>
+  <p class="i-sub">Em 8 perguntas r&#225;pidas, geramos seu Mapa Astral completo + Mapa Num&#233;rico personalizado &#8212; entregue no seu e-mail em at&#233; 10 minutos.</p>
+  <div class="i-provas">
+    <div class="i-pv"><strong>3.847</strong><span>Mapas entregues</span></div>
+    <div class="i-pv"><strong>4.9&#9733;</strong><span>Avalia&#231;&#227;o m&#233;dia</span></div>
+    <div class="i-pv"><strong>10min</strong><span>Tempo de entrega</span></div>
+  </div>
+  <button class="btn-start" id="btnStart">DESCOBRIR MINHA VIDA E PROP&#211;SITO &#9658;</button>
+  <p class="i-seguro">&#128274; 100% seguro e privado &#8226; Seus dados n&#227;o ser&#227;o compartilhados</p>
+</section>
+
+<section class="quiz-wrap" id="secQuiz">
+  <div class="quiz-box">
+
+    <!-- Q1: Nome -->
+    <div class="q-step" id="step1">
+      <p class="q-num">Pergunta 1 de 8</p>
+      <h2 class="q-text">Como voc&#234; gostaria de ser chamada?</h2>
+      <p class="q-sub">Usaremos seu primeiro nome no mapa personalizado.</p>
+      <div class="inp-group">
+        <label class="inp-label" for="inpNome">Seu primeiro nome</label>
+        <input class="inp-field" type="text" id="inpNome" placeholder="Ex: Ana, Juliana, Beatriz...">
+      </div>
+      <button class="btn-next" id="btnQ1">Continuar &#8594;</button>
+    </div>
+
+    <!-- Q2: Data de nascimento -->
+    <div class="q-step" id="step2">
+      <p class="q-num">Pergunta 2 de 8</p>
+      <h2 class="q-text">Qual sua data de nascimento?</h2>
+      <p class="q-sub">Essencial para calcular seu signo solar, ascendente e posic&#807;&#245;es planetarias.</p>
+      <div class="inp-group">
+        <label class="inp-label" for="inpData">Data de nascimento</label>
+        <input class="inp-field" type="date" id="inpData">
+      </div>
+      <button class="btn-next" id="btnQ2">Continuar &#8594;</button>
+    </div>
+
+    <!-- Q3: Hora -->
+    <div class="q-step" id="step3">
+      <p class="q-num">Pergunta 3 de 8</p>
+      <h2 class="q-text">Voc&#234; sabe sua hora de nascimento?</h2>
+      <p class="q-sub">A hora define seu Ascendente &#8212; muda a cada 2 horas. N&#227;o se preocupe se n&#227;o souber.</p>
+      <div class="opts" id="optsHora">
+        <div class="opt" data-val="sim">
+          <div class="opt-ico">&#128336;</div>
+          <div class="opt-txt"><strong>Sim, sei a hora exata</strong><span>Tenho certidao ou lembro</span></div>
+        </div>
+        <div class="opt" data-val="aprox">
+          <div class="opt-ico">&#128336;</div>
+          <div class="opt-txt"><strong>Sei aproximadamente</strong><span>Manha, tarde ou noite</span></div>
+        </div>
+        <div class="opt" data-val="nao">
+          <div class="opt-ico">&#10067;</div>
+          <div class="opt-txt"><strong>Nao sei a hora</strong><span>Tudo bem, usaremos meio-dia</span></div>
+        </div>
+      </div>
+      <div id="horaExataWrap" style="display:none;margin-top:20px">
+        <label class="inp-label" for="inpHora">Hora exata de nascimento</label>
+        <input class="inp-field" type="time" id="inpHora">
+      </div>
+      <button class="btn-next" id="btnQ3" style="display:none">Continuar &#8594;</button>
+    </div>
+
+    <!-- Q4: Cidade -->
+    <div class="q-step" id="step4">
+      <p class="q-num">Pergunta 4 de 8</p>
+      <h2 class="q-text">Em qual cidade voc&#234; nasceu?</h2>
+      <p class="q-sub">Define as 12 Casas do seu mapa &#8212; essencial para precis&#227;o astrol&#243;gica.</p>
+      <div class="inp-group">
+        <label class="inp-label" for="inpCidade">Cidade e estado/pa&#237;s</label>
+        <input class="inp-field" type="text" id="inpCidade" placeholder="Ex: Sao Paulo, SP &#8226; Rio de Janeiro, RJ">
+      </div>
+      <button class="btn-next" id="btnQ4">Continuar &#8594;</button>
+    </div>
+
+    <!-- Q5: Email -->
+    <div class="q-step" id="step5">
+      <p class="q-num">Pergunta 5 de 8</p>
+      <h2 class="q-text">Qual seu melhor e-mail?</h2>
+      <p class="q-sub">Seu mapa ser&#225; enviado para este endere&#231;o em at&#233; 10 minutos ap&#243;s o pagamento.</p>
+      <div class="inp-group">
+        <label class="inp-label" for="inpEmail">Seu e-mail</label>
+        <input class="inp-field" type="email" id="inpEmail" placeholder="voce@email.com">
+      </div>
+      <button class="btn-next" id="btnQ5">Continuar &#8594;</button>
+    </div>
+
+    <!-- Q6: Desafio -->
+    <div class="q-step" id="step6">
+      <p class="q-num">Pergunta 6 de 8</p>
+      <h2 class="q-text">Qual &#233; seu maior desafio agora?</h2>
+      <p class="q-sub">Isso personaliza a leitura das casas planetarias no seu mapa.</p>
+      <div class="opts" id="optsDesafio">
+        <div class="opt" data-val="amor">
+          <div class="opt-ico">&#10084;</div>
+          <div class="opt-txt"><strong>Amor e relacionamentos</strong><span>Encontrar ou manter o amor certo</span></div>
+        </div>
+        <div class="opt" data-val="proposito">
+          <div class="opt-ico">&#127775;</div>
+          <div class="opt-txt"><strong>Proposito e carreira</strong><span>Descobrir minha missao de vida</span></div>
+        </div>
+        <div class="opt" data-val="dinheiro">
+          <div class="opt-ico">&#128181;</div>
+          <div class="opt-txt"><strong>Financas e prosperidade</strong><span>Atrair abundancia e estabilidade</span></div>
+        </div>
+        <div class="opt" data-val="autoconhecimento">
+          <div class="opt-ico">&#129505;</div>
+          <div class="opt-txt"><strong>Autoconhecimento</strong><span>Entender quem eu realmente sou</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q7: Crenca -->
+    <div class="q-step" id="step7">
+      <p class="q-num">Pergunta 7 de 8</p>
+      <h2 class="q-text">Como voc&#234; se relaciona com astrologia?</h2>
+      <p class="q-sub">N&#227;o existe resposta errada &#8212; isso adapta a linguagem do seu mapa.</p>
+      <div class="opts" id="optsCrencia">
+        <div class="opt" data-val="acredito">
+          <div class="opt-ico">&#127775;</div>
+          <div class="opt-txt"><strong>Acredito e sigo</strong><span>Faz parte da minha vida</span></div>
+        </div>
+        <div class="opt" data-val="curiosa">
+          <div class="opt-ico">&#128269;</div>
+          <div class="opt-txt"><strong>Sou curiosa</strong><span>Quero entender melhor</span></div>
+        </div>
+        <div class="opt" data-val="cetic">
+          <div class="opt-ico">&#129300;</div>
+          <div class="opt-txt"><strong>Sou cetic&#234;</strong><span>Mas estou aberta a descobrir</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q8: Expectativa -->
+    <div class="q-step" id="step8">
+      <p class="q-num">Pergunta 8 de 8</p>
+      <h2 class="q-text">O que voc&#234; espera descobrir no seu mapa?</h2>
+      <p class="q-sub">&#218;ltima pergunta! Isso direciona os insights principais.</p>
+      <div class="opts" id="optsExpect">
+        <div class="opt" data-val="futuro">
+          <div class="opt-ico">&#128302;</div>
+          <div class="opt-txt"><strong>O que o futuro reserva</strong><span>Tendencias e ciclos importantes</span></div>
+        </div>
+        <div class="opt" data-val="personalidade">
+          <div class="opt-ico">&#129756;</div>
+          <div class="opt-txt"><strong>Minha personalidade profunda</strong><span>Talentos ocultos e padroes</span></div>
+        </div>
+        <div class="opt" data-val="relacionamento">
+          <div class="opt-ico">&#128149;</div>
+          <div class="opt-txt"><strong>Compatibilidade amorosa</strong><span>Quem e como amar melhor</span></div>
+        </div>
+        <div class="opt" data-val="missao">
+          <div class="opt-ico">&#10024;</div>
+          <div class="opt-txt"><strong>Minha missao de vida</strong><span>Proposito e caminho da alma</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="result-wrap" id="secResult">
+  <div class="result-box">
+    <div class="r-seal">&#127775;</div>
+    <div class="r-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <h2 class="r-h1">Seu Mapa Astral est&#225; <span style="color:var(--gold)">pronto para ser gerado!</span></h2>
+    <p class="r-sub">Com base nas suas respostas, identificamos configura&#231;&#245;es raras no seu mapa. Veja um resumo antes de receber o documento completo.</p>
+
+    <div class="r-card">
+      <p class="r-card-title">&#127775; Resumo do Seu Mapa</p>
+      <div class="r-item">
+        <span class="r-item-ico">&#128101;</span>
+        <div class="r-item-txt"><strong>Nome</strong><span id="rNome">&#8212;</span></div>
+      </div>
+      <div class="r-item">
+        <span class="r-item-ico">&#9728;</span>
+        <div class="r-item-txt"><strong>Data de Nascimento</strong><span id="rData">&#8212;</span></div>
+      </div>
+      <div class="r-item">
+        <span class="r-item-ico">&#127968;</span>
+        <div class="r-item-txt"><strong>Cidade Natal</strong><span id="rCidade">&#8212;</span></div>
+      </div>
+      <div class="r-item">
+        <span class="r-item-ico">&#128140;</span>
+        <div class="r-item-txt"><strong>Foco Principal</strong><span id="rDesafio">&#8212;</span></div>
+      </div>
+    </div>
+
+    <div class="r-preco">
+      <p class="r-preco-old">De R$ 197,00</p>
+      <p class="r-preco-new">R$ 47,90</p>
+      <p class="r-preco-note">Mapa Astral Completo + Mapa Num&#233;rico Pessoal &#8226; PDF por e-mail em 10 min</p>
+    </div>
+
+    <a class="btn-cta" id="btnCTA" href="LINK_CAKTO_47" target="_blank">&#9889; QUERO MEU MAPA AGORA &#8212; R$ 47,90</a>
+    <p class="r-garantia">&#128274; Pagamento 100% seguro &#8226; Garantia de 7 dias &#8226; Entrega imediata por e-mail</p>
+
+    <div style="margin-top:48px">
+      <p style="font-size:13px;color:#9B87B0;margin-bottom:20px;text-transform:uppercase;letter-spacing:.8px;font-weight:600">O que dizem nossas clientes</p>
+      <div class="r-testemunho">
+        <p class="r-test-txt">"Nunca tinha acreditado muito em astrologia, mas o mapa foi surpreendentemente preciso. Descreveu minha personalidade melhor do que qualquer teste que j&#225; fiz. Recomendo muito!"</p>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#C084FC);display:flex;align-items:center;justify-content:center;font-size:16px">&#128100;</div>
+          <div><p class="r-test-name">Camila R., 29 anos &#8212; S&#227;o Paulo</p><span class="stars-sm">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        </div>
+      </div>
+      <div class="r-testemunho">
+        <p class="r-test-txt">"Recebi em menos de 10 minutos! O documento &#233; lind&#237;ssimo e muito detalhado. Fiquei chocada com a precis&#227;o do meu Ascendente e do mapa num&#233;rico."</p>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#C084FC,#F472B6);display:flex;align-items:center;justify-content:center;font-size:16px">&#128100;</div>
+          <div><p class="r-test-name">Fernanda M., 34 anos &#8212; Belo Horizonte</p><span class="stars-sm">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
-<div class="prog-num" id="progNum"></div>
-<div class="intro" id="introScreen">
-<div class="i-badge">&#10024; Astral . Numerologia . Proposito &#10024;</div>
-<h1 class="i-h1">Descubra o que foi escrito<br>nas estrelas<br><em>sobre voce</em></h1>
-<p class="i-sub">Responda 8 perguntas e receba seu Mapa Astral + Mapa Numerologico completos com tudo sobre sua vida, futuro, proposito, alma gemea, talentos e financas.</p>
-<div class="hooks">
-<div class="hook"><div class="hook-ico">&#127775;</div><div><span class="hook-strong">Proposito de vida</span><span class="hook-txt">O que o cosmos determinou para sua alma</span></div></div>
-<div class="hook"><div class="hook-ico">&#128158;</div><div><span class="hook-strong">Alma gemea</span><span class="hook-txt">Venus e Marte revelam quem foi feito para voce</span></div></div>
-<div class="hook"><div class="hook-ico">&#127919;</div><div><span class="hook-strong">Aptidoes ocultas</span><span class="hook-txt">Os talentos que seus astros revelam</span></div></div>
-<div class="hook"><div class="hook-ico">&#128176;</div><div><span class="hook-strong">Financas e futuro</span><span class="hook-txt">O ramo com mais futuro para seu perfil</span></div></div>
-</div>
-<button class="btn-start" onclick="startQuiz()">DESCOBRIR MINHA VIDA E PROPOSITO &#10024;</button>
-<div class="i-trust"><span>Menos de 2 minutos</span> . <span>100% gratuito</span> . <span>Astral + Numerologia</span></div>
-</div>
-<div class="quiz-wrap" id="quizWrap"><div class="q-box" id="qBox"></div></div>
-<div class="result-wrap" id="resultWrap">
-<div style="text-align:center;margin-bottom:24px">
-<div class="res-avatar">&#128302;</div>
-<div class="res-name" id="resNome">Sua Conexao Astral</div>
-<div class="res-sub" id="resSub">Sol . Lua . Ascendente identificados</div>
-</div>
-<div class="planet-row" id="resPlanetas"></div>
-<div class="prev-card">
-<div class="pc-head"><div class="pc-ico">&#127775;</div><div class="pc-title">Sua Essencia Cosmica</div><div class="pc-badge">ASTRAL + NUMEROLOGIA</div></div>
-<div class="pc-body"><div class="pc-teaser" id="prevEssencia">Seu mapa astral revela uma alma com missao clara, intensidade interior e um proposito que vai muito alem do que voce imagina...</div></div>
-<div class="pc-lock">&#128274; <span>Desbloqueie</span> para ver sua analise completa</div>
-</div>
-<div class="prev-card">
-<div class="pc-head"><div class="pc-ico">&#128158;</div><div class="pc-title">Sua Alma Gemea e Padroes de Amor</div><div class="pc-badge" id="prevVenusBadge">VENUS + MARTE</div></div>
-<div class="pc-body"><div class="pc-teaser">Venus e Marte revelam as caracteristicas exatas da sua alma gemea e por que alguns amores chegam para transformar...</div></div>
-<div class="pc-lock">&#128274; <span>Desbloqueie</span> para ver seu padrao amoroso</div>
-</div>
-<div class="prev-card">
-<div class="pc-head"><div class="pc-ico">&#128302;</div><div class="pc-title">Seu Destino nos Proximos 12 Meses</div><div class="pc-badge">PREVISAO 2025-2026</div></div>
-<div class="pc-body"><div class="pc-teaser">Os transitos planetarios apontam para um ciclo de grandes decisoes. O cosmos tem algo importante reservado para voce...</div></div>
-<div class="pc-lock">&#128274; <span>Desbloqueie</span> para ver sua previsao</div>
-</div>
-<div class="offer">
-<div class="offer-tag">Oferta exclusiva pos-quiz</div>
-<h2 class="offer-h2">Desbloqueie sua Conexao Astral Completa</h2>
-<div class="offer-items">
-<div class="oi"><div class="oi-ck">&#10003;</div>Mapa Astral Completo: Sol, Lua, Ascendente, Venus e Marte</div>
-<div class="oi"><div class="oi-ck">&#10003;</div>Mapa Numerologico: Caminho de Vida, Expressao, Alma e Destino</div>
-<div class="oi"><div class="oi-ck">&#10003;</div>As caracteristicas da sua alma gemea segundo o cosmos</div>
-<div class="oi"><div class="oi-ck">&#10003;</div>O ramo de atuacao com mais futuro para o seu perfil cosmico</div>
-<div class="oi"><div class="oi-ck">&#10003;</div>Seus talentos, aptidoes e proposito de vida revelados</div>
-<div class="oi"><div class="oi-ck">&#10003;</div>Analise completa 40+ paginas entregue por e-mail em ate 10 min</div>
-</div>
-<div class="timer">
-<div class="tu"><span class="tun" id="tm">14</span><span class="tul">min</span></div>
-<div class="tu"><span class="tun" id="ts">59</span><span class="tul">seg</span></div>
-</div>
-<div class="price-from">De R$497,70</div>
-<div class="price-big"><sup>R$</sup>47<span class="price-cents">,90</span></div>
-<div class="price-pix">Pix na hora | 3x de R$17,30 sem juros</div>
-<a href="LINK_CAKTO_47" class="btn-buy" id="btnBuy">&#128302; QUERO MINHA ANALISE COSMICA COMPLETA</a>
-<div class="offer-guar">&#128737; 7 dias de garantia . Acesso em ate 10 minutos</div>
-</div>
-</div>
+<div class="prog-num" id="progNum">0/8</div>
+
 <script>
-const Qs=[
-{id:'padrao',tipo:'opt',step:'Pergunta 1 de 8',titulo:'Qual padrao se repete na sua vida, mesmo quando voce tenta mudar?',sub:'Seja honesta. Seu mapa astral explica exatamente por que.',opts:[{e:'&#128148;',t:'Quero entender os padroes dos meus relacionamentos e encontrar minha alma gemea'},{e:'&#127775;',t:'Preciso descobrir meu proposito real e o que vim fazer aqui'},{e:'&#127919;',t:'Quero saber em qual area da vida minha alma tem mais aptidao'},{e:'&#128302;',t:'Quero entender os ciclos que os astros e meus numeros revelam'}]},
-{id:'foco',tipo:'opt',step:'Pergunta 2 de 8',titulo:'O que as estrelas ainda nao te revelaram, mas voce sempre quis saber?',sub:'Seu mapa astral e numerologico tem a resposta.',opts:[{e:'&#128158;',t:'As caracteristicas da minha alma gemea e como reconhece-la'},{e:'&#128176;',t:'Qual ramo de atuacao tem futuro real para o meu perfil cosmico'},{e:'&#127793;',t:'Meus talentos e aptidoes que ainda nao descobri'},{e:'&#9889;',t:'Minha missao karmica e o que precisei curar nesta vida'}]},
-{id:'nome',tipo:'inp',step:'Pergunta 3 de 8',titulo:'Para personalizar sua analise, me conta:',sub:'Precisamos do seu nome e celular para enviar sua analise e te avisar quando estiver pronta.',campos:[{id:'nome',type:'text',ph:'Seu primeiro nome'},{id:'celular',type:'tel',ph:'Seu WhatsApp (ex: 11 99999-9999)'}]},
-{id:'elemento',tipo:'opt',step:'Pergunta 4 de 8',titulo:'Qual dessas frases mais ressoa com a sua alma?',sub:'Seu elemento cosmico ja esta se revelando aqui.',opts:[{e:'&#128293;',t:'Sou guiada pelo fogo: intensa, apaixonada e movida por proposito'},{e:'&#127754;',t:'Sou guiada pela agua: intuitiva, empatica e profundamente sensivel'},{e:'&#128168;',t:'Sou guiada pelo ar: mental, comunicativa e movida por ideias'},{e:'&#127807;',t:'Sou guiada pela terra: pratica, constante e conectada ao real'}]},
-{id:'nasc',tipo:'inp',step:'Pergunta 5 de 8',titulo:'Qual e a sua data de nascimento?',sub:'Com esses dados calculamos sua posicao solar, lunar e os aspectos do seu mapa.',campos:[{id:'data',type:'date',ph:''}]},
-{id:'amor',tipo:'opt',step:'Pergunta 6 de 8',titulo:'O que voce mais busca em uma conexao de alma?',sub:'Venus no seu mapa revela o perfil exato de quem foi feito para voce.',opts:[{e:'&#128293;',t:'Uma conexao intensa que transforme e desperte minha alma'},{e:'&#127769;',t:'Alguem que me entenda no silencio, profundo e verdadeiro'},{e:'&#127800;',t:'Leveza, cumplicidade e crescimento juntos'},{e:'&#9889;',t:'Liberdade com conexao: independente mas unido por proposito'}]},
-{id:'dinheiro',tipo:'opt',step:'Pergunta 7 de 8',titulo:'O que seu mapa revela sobre prosperidade?',sub:'Jupiter, Saturno e seu Numero do Destino mostram por onde sua alma prospera.',opts:[{e:'&#128176;',t:'Quero descobrir em qual area minha alma tem dom natural e futuro'},{e:'&#128275;',t:'Sinto que ha um bloqueio karmico impedindo minha prosperidade'},{e:'&#129517;',t:'Preciso de direcao: nao sei qual caminho seguir'},{e:'&#128640;',t:'Estou pronta para ativar meu potencial cosmico'}]},
-{id:'email',tipo:'inp',step:'Ultima etapa: quase la!',titulo:'Para onde enviamos sua analise completa?',sub:'Apos a confirmacao, pediremos seus dados exatos de nascimento para gerar seu mapa personalizado.',campos:[{id:'email',type:'email',ph:'Seu melhor e-mail'}]}
-];
-let cur=0;const R={};
-function startQuiz(){
-  document.getElementById('introScreen').style.display='none';
-  document.getElementById('quizWrap').classList.add('active');
-  document.getElementById('progWrap').style.display='block';
-  document.getElementById('progNum').style.display='block';
-  render(0);
-}
-function render(idx){
-  cur=idx;const total=Qs.length;
-  const pct=Math.round((idx/total)*100);
-  document.getElementById('progBar').style.width=pct+'%';
-  document.getElementById('progNum').textContent=idx+'/'+total;
-  const q=Qs[idx];const box=document.getElementById('qBox');
-  let inner='<div class="q-step">'+q.step+'</div><div class="q-title">'+q.titulo+'</div><div class="q-sub">'+q.sub+'</div>';
-  if(q.tipo==='opt'){
-    const sel=R[q.id];
-    inner+='<div class="opts">'+q.opts.map((o,i)=>'<div class="opt'+(sel===i?' selected':'')+'" onclick="pickOpt(this,'+i+',''+q.id+'')"><div class="opt-emoji">'+o.e+'</div><div class="opt-text">'+o.t+'</div><div class="opt-check">'+(sel===i?'&#10003;':'')+'</div></div>').join('')+'</div>';
-    inner+=nav(idx,total,sel===undefined);
-  }else{
-    let fields='';
-    if(q.campos.length===2)fields='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
-    q.campos.forEach(c=>{
-      const v=R[c.id]||'';
-      fields+='<input class="q-input" type="'+c.type+'" id="f_'+c.id+'" placeholder="'+c.ph+'" value="'+v+'" oninput="save(''+c.id+'',this.value)">';
-    });
-    if(q.campos.length===2)fields+='</div>';
-    inner+=fields;inner+=nav(idx,total,false);
+var answers = {};
+var currentStep = 0;
+var totalSteps = 8;
+
+function showSection(id) {
+  document.getElementById("secIntro").style.display = "none";
+  document.getElementById("secQuiz").style.display = "none";
+  document.getElementById("secResult").style.display = "none";
+  var el = document.getElementById(id);
+  if (el) {
+    el.style.display = "flex";
   }
-  box.innerHTML=inner;
 }
-function nav(idx,total,disabled){
-  return '<div class="q-nav">'+(idx>0?'<button class="btn-back" onclick="go('+(idx-1)+')">Voltar</button>':'')+'<button class="btn-next" id="btnN" onclick="advance()" '+(disabled?'disabled':'')+'>'+(idx===total-1?'VER MEU MAPA &#128302;':'CONTINUAR')+'</button></div>';
+
+function updateProgress(step) {
+  var pct = Math.round((step / totalSteps) * 100);
+  document.getElementById("progBar").style.width = pct + "%";
+  document.getElementById("progNum").textContent = step + "/" + totalSteps;
+  document.getElementById("progWrap").style.display = "block";
+  document.getElementById("progNum").style.display = "block";
 }
-function pickOpt(el,idx,qid){
-  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');R[qid]=idx;
-  localStorage.setItem('quizDados',JSON.stringify(R));
-  const btn=document.getElementById('btnN');if(btn)btn.disabled=false;
-  setTimeout(advance,480);
+
+function goStep(n) {
+  var steps = document.querySelectorAll(".q-step");
+  steps.forEach(function(s) { s.classList.remove("active"); });
+  var target = document.getElementById("step" + n);
+  if (target) {
+    target.classList.add("active");
+    currentStep = n;
+    updateProgress(n - 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 }
-function save(id,val){R[id]=val;}
-function advance(){
-  const q=Qs[cur];
-  if(q.tipo==='inp'){
-    const first=q.campos[0];const el=document.getElementById('f_'+first.id);
-    if(first.id==='email'){
-      const v=el?el.value.trim():'';
-      if(!v||!v.includes('@')){if(el){el.focus();el.style.borderColor='#F472B6';setTimeout(()=>el.style.borderColor='',1500);}return;}
-    }else{
-      if(el&&!el.value.trim()){el.focus();el.style.borderColor='#F472B6';setTimeout(()=>el.style.borderColor='',1500);return;}
+
+function startQuiz() {
+  showSection("secQuiz");
+  document.getElementById("secQuiz").style.display = "flex";
+  goStep(1);
+  updateProgress(0);
+}
+
+function showResult() {
+  document.getElementById("progWrap").style.display = "none";
+  document.getElementById("progNum").style.display = "none";
+  showSection("secResult");
+  document.getElementById("secResult").style.display = "flex";
+
+  var nome = answers.nome || "";
+  var data = answers.data || "";
+  var cidade = answers.cidade || "";
+  var desafio = answers.desafio || "";
+
+  document.getElementById("rNome").textContent = nome;
+
+  if (data) {
+    var parts = data.split("-");
+    if (parts.length === 3) {
+      document.getElementById("rData").textContent = parts[2] + "/" + parts[1] + "/" + parts[0];
+    } else {
+      document.getElementById("rData").textContent = data;
     }
-    q.campos.forEach(c=>{const e=document.getElementById('f_'+c.id);if(e)R[c.id]=e.value;});
-    localStorage.setItem('quizDados',JSON.stringify(R));
   }
-  if(cur<Qs.length-1)render(cur+1);else showResult();
+
+  document.getElementById("rCidade").textContent = cidade;
+
+  var desafioMap = {
+    "amor": "Amor e relacionamentos",
+    "proposito": "Proposito e carreira",
+    "dinheiro": "Financas e prosperidade",
+    "autoconhecimento": "Autoconhecimento"
+  };
+  document.getElementById("rDesafio").textContent = desafioMap[desafio] || desafio;
+
+  var email = answers.email || "";
+  var cta = document.getElementById("btnCTA");
+  var base = "LINK_CAKTO_47";
+  if (email) {
+    cta.href = base + "?email=" + encodeURIComponent(email) + "&nome=" + encodeURIComponent(nome);
+  } else {
+    cta.href = base;
+  }
 }
-function go(idx){render(idx);}
-function signo(ds){
-  if(!ds)return{n:'Gemeos'};
-  const[,m,d]=ds.split('-').map(Number);
-  const t=[[12,22,1,19,'Capricornio'],[1,20,2,18,'Aquario'],[2,19,3,20,'Peixes'],[3,21,4,19,'Aries'],[4,20,5,20,'Touro'],[5,21,6,20,'Gemeos'],[6,21,7,22,'Cancer'],[7,23,8,22,'Leao'],[8,23,9,22,'Virgem'],[9,23,10,22,'Libra'],[10,23,11,21,'Escorpiao'],[11,22,12,21,'Sagitario']];
-  for(const[m1,d1,m2,d2,n]of t)if((m===m1&&d>=d1)||(m===m2&&d<=d2))return{n};
-  return{n:'Capricornio'};
-}
-function lua(ds){
-  if(!ds)return'Escorpiao';
-  const[y,m,d]=ds.split('-').map(Number);
-  const L=['Aries','Touro','Gemeos','Cancer','Leao','Virgem','Libra','Escorpiao','Sagitario','Capricornio','Aquario','Peixes'];
-  const diff=Math.floor((new Date(y,m-1,d)-new Date(2000,0,1))/86400000);
-  return L[Math.abs(Math.floor((diff%354)/29.5*12))%12];
-}
-function showResult(){
-  document.getElementById('progBar').style.width='100%';
-  document.getElementById('progNum').textContent='ok';
-  document.getElementById('quizWrap').classList.remove('active');
-  const nome=R.nome||'Voce';
-  const sol=signo(R.data);const l=lua(R.data);
-  document.getElementById('resNome').textContent='Conexao Astral de '+nome;
-  document.getElementById('resSub').textContent='Sol em '+sol.n+' . Lua em '+l+' . Ascendente a calcular';
-  document.getElementById('prevVenusBadge').textContent='VENUS . '+nome.toUpperCase();
-  document.getElementById('resPlanetas').innerHTML='<div class="pchip">Sol: <strong>'+sol.n+'</strong></div><div class="pchip">Lua: <strong>'+l+'</strong></div><div class="pchip">Numerologia ativada</div>';
-  document.getElementById('prevEssencia').textContent=nome+', sua combinacao de Sol em '+sol.n+' com Lua em '+l+' cria uma personalidade rara com intensidade interior e magnetismo natural...';
-  const params=new URLSearchParams();
-  if(R.email)params.set('email',R.email);
-  if(nome)params.set('nome',nome);
-  if(R.celular)params.set('phone',R.celular);
-  document.getElementById('btnBuy').href='LINK_CAKTO_47?'+params.toString();
-  localStorage.setItem('quizDados',JSON.stringify({nome,sol:sol.n,lua:l,...R}));
-  document.getElementById('resultWrap').classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-  startTimer();
-}
-function startTimer(){
-  let end=+localStorage.getItem('quizEnd')||0;
-  if(!end||end<Date.now()){end=Date.now()+14*60000;localStorage.setItem('quizEnd',end);}
-  function tick(){
-    const d=Math.max(0,end-Date.now());
-    document.getElementById('tm').textContent=String(Math.floor(d/60000)).padStart(2,'0');
-    document.getElementById('ts').textContent=String(Math.floor(d%60000/1000)).padStart(2,'0');
-    if(d>0)setTimeout(tick,1000);
-  }tick();
-}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  var btnStart = document.getElementById("btnStart");
+  if (btnStart) {
+    btnStart.addEventListener("click", startQuiz);
+  }
+
+  var btnQ1 = document.getElementById("btnQ1");
+  if (btnQ1) {
+    btnQ1.addEventListener("click", function() {
+      var val = document.getElementById("inpNome").value.trim();
+      if (!val) {
+        alert("Por favor, informe seu nome.");
+        return;
+      }
+      answers.nome = val;
+      goStep(2);
+    });
+  }
+
+  var btnQ2 = document.getElementById("btnQ2");
+  if (btnQ2) {
+    btnQ2.addEventListener("click", function() {
+      var val = document.getElementById("inpData").value;
+      if (!val) {
+        alert("Por favor, informe sua data de nascimento.");
+        return;
+      }
+      answers.data = val;
+      goStep(3);
+    });
+  }
+
+  var optsHora = document.querySelectorAll("#optsHora .opt");
+  optsHora.forEach(function(opt) {
+    opt.addEventListener("click", function() {
+      optsHora.forEach(function(o) { o.classList.remove("selected"); });
+      opt.classList.add("selected");
+      var val = opt.getAttribute("data-val");
+      answers.horaConhecimento = val;
+      if (val === "sim") {
+        document.getElementById("horaExataWrap").style.display = "block";
+        document.getElementById("btnQ3").style.display = "inline-flex";
+      } else if (val === "aprox") {
+        document.getElementById("horaExataWrap").style.display = "block";
+        document.getElementById("btnQ3").style.display = "inline-flex";
+      } else {
+        document.getElementById("horaExataWrap").style.display = "none";
+        answers.hora = "12:00";
+        document.getElementById("btnQ3").style.display = "inline-flex";
+      }
+    });
+  });
+
+  var btnQ3 = document.getElementById("btnQ3");
+  if (btnQ3) {
+    btnQ3.addEventListener("click", function() {
+      var horaInp = document.getElementById("inpHora").value;
+      if (horaInp) {
+        answers.hora = horaInp;
+      } else if (!answers.hora) {
+        answers.hora = "12:00";
+      }
+      goStep(4);
+    });
+  }
+
+  var btnQ4 = document.getElementById("btnQ4");
+  if (btnQ4) {
+    btnQ4.addEventListener("click", function() {
+      var val = document.getElementById("inpCidade").value.trim();
+      if (!val) {
+        alert("Por favor, informe sua cidade de nascimento.");
+        return;
+      }
+      answers.cidade = val;
+      goStep(5);
+    });
+  }
+
+  var btnQ5 = document.getElementById("btnQ5");
+  if (btnQ5) {
+    btnQ5.addEventListener("click", function() {
+      var val = document.getElementById("inpEmail").value.trim();
+      if (!val || val.indexOf("@") === -1) {
+        alert("Por favor, informe um e-mail valido.");
+        return;
+      }
+      answers.email = val;
+      goStep(6);
+    });
+  }
+
+  var optsDesafio = document.querySelectorAll("#optsDesafio .opt");
+  optsDesafio.forEach(function(opt) {
+    opt.addEventListener("click", function() {
+      optsDesafio.forEach(function(o) { o.classList.remove("selected"); });
+      opt.classList.add("selected");
+      answers.desafio = opt.getAttribute("data-val");
+      setTimeout(function() { goStep(7); }, 400);
+    });
+  });
+
+  var optsCrencia = document.querySelectorAll("#optsCrencia .opt");
+  optsCrencia.forEach(function(opt) {
+    opt.addEventListener("click", function() {
+      optsCrencia.forEach(function(o) { o.classList.remove("selected"); });
+      opt.classList.add("selected");
+      answers.crenca = opt.getAttribute("data-val");
+      setTimeout(function() { goStep(8); }, 400);
+    });
+  });
+
+  var optsExpect = document.querySelectorAll("#optsExpect .opt");
+  optsExpect.forEach(function(opt) {
+    opt.addEventListener("click", function() {
+      optsExpect.forEach(function(o) { o.classList.remove("selected"); });
+      opt.classList.add("selected");
+      answers.expectativa = opt.getAttribute("data-val");
+      updateProgress(8);
+      setTimeout(function() { showResult(); }, 600);
+    });
+  });
+
+});
 </script>
 </body>
 </html>
