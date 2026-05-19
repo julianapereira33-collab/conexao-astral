@@ -1,5 +1,5 @@
 {
-  "name": "Conexão Astral - Workflow",
+  "name": "Conexao Astral - Mapa IA + Entrega Email",
   "nodes": [
     {
       "parameters": {
@@ -8,8 +8,8 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "webhook-node",
-      "name": "Webhook",
+      "id": "webhook-cakto",
+      "name": "Webhook Cakto",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
@@ -28,13 +28,12 @@
           },
           "conditions": [
             {
-              "id": "condition-1",
-              "leftValue": "={{ $json.email }}",
-              "rightValue": "",
+              "id": "cond-evento",
+              "leftValue": "={{ $json.body.event }}",
+              "rightValue": "purchase.approved",
               "operator": {
                 "type": "string",
-                "operation": "exists",
-                "singleValue": true
+                "operation": "equals"
               }
             }
           ],
@@ -42,8 +41,8 @@
         },
         "options": {}
       },
-      "id": "if-node",
-      "name": "Verificar Email",
+      "id": "if-evento",
+      "name": "Compra Aprovada?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
@@ -53,14 +52,64 @@
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ success: true, message: 'Dados recebidos com sucesso' }) }}",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "nome",
+              "value": "={{ $json.body.data.customer.name }}",
+              "type": "string"
+            },
+            {
+              "id": "a2",
+              "name": "email",
+              "value": "={{ $json.body.data.customer.email }}",
+              "type": "string"
+            },
+            {
+              "id": "a3",
+              "name": "produto",
+              "value": "={{ $json.body.data.product.name }}",
+              "type": "string"
+            },
+            {
+              "id": "a4",
+              "name": "transacao",
+              "value": "={{ $json.body.data.transaction.id }}",
+              "type": "string"
+            },
+            {
+              "id": "a5",
+              "name": "valor",
+              "value": "={{ $json.body.data.transaction.amount }}",
+              "type": "number"
+            },
+            {
+              "id": "a6",
+              "name": "data_nascimento",
+              "value": "={{ $json.body.data.customer.birth_date || 'nao informado' }}",
+              "type": "string"
+            },
+            {
+              "id": "a7",
+              "name": "hora_nascimento",
+              "value": "={{ $json.body.data.customer.birth_time || 'nao informado' }}",
+              "type": "string"
+            },
+            {
+              "id": "a8",
+              "name": "cidade_nascimento",
+              "value": "={{ $json.body.data.customer.birth_city || 'nao informado' }}",
+              "type": "string"
+            }
+          ]
+        },
         "options": {}
       },
-      "id": "respond-node",
-      "name": "Resposta Sucesso",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
+      "id": "set-dados",
+      "name": "Extrair Dados do Cliente",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
       "position": [
         680,
         220
@@ -68,44 +117,189 @@
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ success: false, message: 'Email não informado' }) }}",
+        "resource": "chat",
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Voce e uma astrologa e numerologa espiritualista experiente. Gere mapas astrais e numerologicos profundos, personalizados, emocionalmente tocantes e reveladores. Escreva sempre em portugues do Brasil, com linguagem calorosa, intuitiva e envolvente. O mapa deve ter no minimo 800 palavras e ser rico em detalhes personalizados."
+            },
+            {
+              "role": "user",
+              "content": "={{ 'Gere um Mapa Astral + Mapa Numerologico completo e personalizado para:\\n\\nNome: ' + $json.nome + '\\nData de Nascimento: ' + $json.data_nascimento + '\\nHora de Nascimento: ' + $json.hora_nascimento + '\\nCidade de Nascimento: ' + $json.cidade_nascimento + '\\n\\nO mapa deve incluir obrigatoriamente:\\n\\n1. SAUDACAO PERSONALIZADA\\n2. MAPA ASTRAL COMPLETO:\\n   - Signo Solar (interpretacao profunda)\\n   - Signo Lunar (emocoes e mundo interior)\\n   - Ascendente (como o mundo te ve)\\n   - Venus (amor e relacionamentos)\\n   - Marte (energia e paixao)\\n   - Mercurio (comunicacao e mente)\\n   - Proposito de Vida (missao cosmica da alma)\\n   - Alma Gemea (perfil da pessoa ideal)\\n3. MAPA NUMEROLOGICO COMPLETO:\\n   - Numero do Caminho de Vida\\n   - Numero de Expressao\\n   - Numero da Alma\\n   - Numero da Personalidade\\n   - Numero do Destino\\n4. FINANCAS E CARREIRA\\n5. PREVISAO 2025-2026\\n6. MENSAGEM FINAL DE ENCORAJAMENTO\\n\\nFormate com titulos em MAIUSCULO e emojis para tornar visualmente agradavel no email.' }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 4000,
+          "temperature": 0.85
+        }
+      },
+      "id": "openai-mapa",
+      "name": "Gerar Mapa com IA (OpenAI)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        900,
+        220
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "COLOQUE_SEU_CREDENTIAL_ID",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b1",
+              "name": "mapa_texto",
+              "value": "={{ $json.message.content }}",
+              "type": "string"
+            }
+          ]
+        },
         "options": {}
       },
-      "id": "respond-error-node",
-      "name": "Resposta Erro",
+      "id": "set-mapa",
+      "name": "Extrair Texto do Mapa",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Extrair Dados do Cliente').item.json.email }}",
+        "subject": "={{ '\\u2728 Seu Mapa Astral + Numerol\\u00f3gico est\\u00e1 pronto, ' + $('Extrair Dados do Cliente').item.json.nome + '!' }}",
+        "emailType": "html",
+        "message": "={{ '<div style=\"font-family:Georgia,serif;max-width:680px;margin:0 auto;background:#0D0720;color:#F0E8FF;padding:40px 32px;border-radius:16px\"><div style=\"text-align:center;margin-bottom:32px\"><h1 style=\"font-size:28px;color:#C084FC;margin-bottom:8px\">\\u2728 Conex\\u00e3o Astral</h1><p style=\"color:#B89FD0;font-size:14px\">Mapa Astral + Mapa Numerol\\u00f3gico Personalizado</p></div><div style=\"background:#1C1035;border:1px solid #2E1858;border-radius:12px;padding:28px;line-height:1.9;font-size:15px;color:#E8D5FF\">' + $json.mapa_texto.split('\\n').join('<br>') + '</div><div style=\"text-align:center;margin-top:32px;padding:20px;background:#140830;border-radius:12px\"><p style=\"color:#C084FC;font-size:13px;margin-bottom:8px\">\\ud83d\\udee1\\ufe0f Garantia de 7 dias | Suporte: contato@conexaoastral.com.br</p><p style=\"color:#6B5A80;font-size:12px\">Transa\\u00e7\\u00e3o: ' + $('Extrair Dados do Cliente').item.json.transacao + '</p></div></div>' }}",
+        "options": {}
+      },
+      "id": "email-entrega",
+      "name": "Enviar Mapa por Email (Gmail)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1340,
+        220
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "COLOQUE_SEU_CREDENTIAL_ID",
+          "name": "Gmail OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ sucesso: true, mensagem: 'Mapa gerado e enviado com sucesso', email: $('Extrair Dados do Cliente').item.json.email }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-sucesso",
+      "name": "Resposta Sucesso",
       "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ sucesso: false, mensagem: 'Evento ignorado', evento: $json.body.event }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-ignorado",
+      "name": "Resposta Evento Ignorado",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
       "position": [
         680,
-        380
+        400
       ]
     }
   ],
   "connections": {
-    "Webhook": {
+    "Webhook Cakto": {
       "main": [
         [
           {
-            "node": "Verificar Email",
+            "node": "Compra Aprovada?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Verificar Email": {
+    "Compra Aprovada?": {
       "main": [
         [
           {
-            "node": "Resposta Sucesso",
+            "node": "Extrair Dados do Cliente",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Resposta Erro",
+            "node": "Resposta Evento Ignorado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair Dados do Cliente": {
+      "main": [
+        [
+          {
+            "node": "Gerar Mapa com IA (OpenAI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gerar Mapa com IA (OpenAI)": {
+      "main": [
+        [
+          {
+            "node": "Extrair Texto do Mapa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair Texto do Mapa": {
+      "main": [
+        [
+          {
+            "node": "Enviar Mapa por Email (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mapa por Email (Gmail)": {
+      "main": [
+        [
+          {
+            "node": "Resposta Sucesso",
             "type": "main",
             "index": 0
           }
@@ -115,13 +309,16 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "1",
+  "versionId": "2",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "conexao-astral"
+    "templateCredsSetupCompleted": false,
+    "instanceId": "conexao-astral",
+    "description": "Workflow completo: Webhook Cakto -> Verifica compra aprovada -> Extrai dados -> Gera mapa astral + numerologico com GPT-4o -> Envia por email HTML estilizado."
   },
-  "id": "conexao-astral-workflow",
+  "id": "conexao-astral-workflow-v2",
   "tags": []
 }
