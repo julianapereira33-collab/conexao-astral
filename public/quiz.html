@@ -3,514 +3,878 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conexao Astral - Descubra Seu Mapa</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Conexão Astral — Descubra Seu Mapa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0D0720;--lilac:#C084FC;--violet:#7C3AED;--gold:#F5C842;--rose:#F472B6}
-body{background:var(--bg);color:#fff;font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-.topbar{background:linear-gradient(90deg,#5B21B6,#7C3AED,#5B21B6);text-align:center;padding:12px 20px;font-size:13px;font-weight:600;letter-spacing:.5px}
-.topbar strong{color:var(--gold)}
-.prog-wrap{position:fixed;top:0;left:0;right:0;height:4px;background:#1B0E3D;z-index:200;display:none}
-.prog-bar{height:100%;background:linear-gradient(90deg,#7C3AED,#C084FC,#F472B6);transition:width .5s ease;width:0%}
-.prog-num{position:fixed;top:8px;right:16px;font-size:11px;font-weight:700;color:#B89FD0;z-index:201;display:none}
-.intro{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 24px;text-align:center;position:relative}
-.intro::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,.35) 0%,transparent 70%);pointer-events:none}
-.i-badge{display:inline-flex;align-items:center;gap:8px;background:#1B0E3D;border:1px solid #3B2070;border-radius:100px;padding:8px 18px;font-size:12px;font-weight:600;color:#C084FC;margin-bottom:28px;letter-spacing:.5px}
-.i-h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5.5vw,52px);font-weight:900;line-height:1.08;margin-bottom:20px}
-.i-h1 span{background:linear-gradient(135deg,#F5C842,#F472B6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.i-sub{font-size:clamp(15px,2.2vw,18px);color:#C4B5D8;max-width:540px;line-height:1.65;margin-bottom:36px}
-.i-provas{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
-.i-pv{text-align:center}
-.i-pv strong{display:block;font-family:'Playfair Display',serif;font-size:26px;color:var(--gold)}
-.i-pv span{font-size:11px;color:#9B87B0;text-transform:uppercase;letter-spacing:.8px}
-.btn-start{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#7C3AED,#C084FC);color:#fff;font-size:16px;font-weight:700;padding:18px 42px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;letter-spacing:.3px;box-shadow:0 8px 32px rgba(124,58,237,.5);transition:transform .2s,box-shadow .2s}
-.btn-start:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(124,58,237,.65)}
-.i-seguro{margin-top:20px;font-size:12px;color:#7A6B90}
-.quiz-wrap{display:none;min-height:100vh;padding:80px 24px 40px;align-items:center;justify-content:center}
-.quiz-box{max-width:600px;width:100%;margin:0 auto}
-.q-step{display:none}
-.q-step.active{display:block}
-.q-num{font-size:11px;font-weight:700;color:#C084FC;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px}
-.q-text{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,30px);font-weight:700;line-height:1.25;margin-bottom:8px}
-.q-sub{font-size:14px;color:#9B87B0;margin-bottom:32px}
-.opts{display:flex;flex-direction:column;gap:12px}
-.opt{display:flex;align-items:center;gap:14px;background:#12082A;border:1.5px solid #2D1854;border-radius:14px;padding:16px 20px;cursor:pointer;transition:border-color .2s,background .2s;text-align:left}
-.opt:hover{border-color:#7C3AED;background:#1B0E3D}
-.opt.selected{border-color:#C084FC;background:#1B0E3D}
-.opt-ico{width:40px;height:40px;border-radius:50%;background:#1B0E3D;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.opt-txt strong{display:block;font-size:15px;font-weight:600;margin-bottom:2px}
-.opt-txt span{font-size:12px;color:#9B87B0}
-.inp-group{margin-bottom:20px}
-.inp-label{display:block;font-size:13px;font-weight:600;color:#C084FC;margin-bottom:8px}
-.inp-field{width:100%;background:#12082A;border:1.5px solid #2D1854;border-radius:12px;padding:14px 18px;color:#fff;font-size:15px;font-family:'DM Sans',sans-serif;transition:border-color .2s;outline:none}
-.inp-field:focus{border-color:#7C3AED}
-.inp-field::placeholder{color:#4A3570}
-.btn-next{margin-top:28px;display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#7C3AED,#C084FC);color:#fff;font-size:15px;font-weight:700;padding:15px 36px;border-radius:100px;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(124,58,237,.45);transition:transform .2s,box-shadow .2s}
-.btn-next:hover{transform:translateY(-2px)}
-.result-wrap{display:none;min-height:100vh;padding:80px 24px 60px;align-items:center;justify-content:center}
-.result-box{max-width:620px;width:100%;margin:0 auto;text-align:center}
-.r-seal{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#C084FC);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 24px}
-.r-h1{font-family:'Playfair Display',serif;font-size:clamp(24px,4.5vw,38px);font-weight:900;line-height:1.15;margin-bottom:16px}
-.r-sub{font-size:16px;color:#C4B5D8;line-height:1.6;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto}
-.r-card{background:linear-gradient(135deg,#12082A,#1B0E3D);border:1px solid #3B2070;border-radius:20px;padding:28px;margin-bottom:28px;text-align:left}
-.r-card-title{font-size:13px;font-weight:700;color:#C084FC;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
-.r-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2D1854}
-.r-item:last-child{border-bottom:none}
-.r-item-ico{font-size:20px}
-.r-item-txt strong{display:block;font-size:13px;color:#9B87B0;margin-bottom:2px}
-.r-item-txt span{font-size:15px;font-weight:600}
-.r-preco{margin-bottom:28px}
-.r-preco-old{font-size:14px;color:#6B5B85;text-decoration:line-through;margin-bottom:4px}
-.r-preco-new{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:var(--gold)}
-.r-preco-note{font-size:13px;color:#9B87B0;margin-top:4px}
-.btn-cta{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-size:17px;font-weight:700;padding:20px 48px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;letter-spacing:.3px;box-shadow:0 8px 32px rgba(22,163,74,.5);transition:transform .2s,box-shadow .2s;width:100%;justify-content:center;max-width:420px}
-.btn-cta:hover{transform:translateY(-2px)}
-.r-garantia{margin-top:20px;font-size:12px;color:#7A6B90}
-.r-stars{color:#F5C842;font-size:20px;letter-spacing:4px;margin-bottom:8px}
-.r-testemunho{background:#12082A;border:1px solid #2D1854;border-radius:16px;padding:20px;margin-bottom:12px;text-align:left}
-.r-test-txt{font-size:14px;color:#C4B5D8;line-height:1.55;font-style:italic;margin-bottom:12px}
-.r-test-name{font-size:13px;font-weight:600;color:#C084FC}
-.stars-sm{color:#F5C842;font-size:13px}
-@media(max-width:480px){.i-provas{gap:20px}.btn-start{padding:16px 32px;font-size:15px}.btn-cta{padding:18px 32px;font-size:16px}}
+  :root {
+    --void: #05040f;
+    --deep: #0d0b1e;
+    --cosmos: #140f2d;
+    --nebula: #1e1640;
+    --violet: #6b3fa0;
+    --violet-bright: #9b59d0;
+    --amethyst: #c084fc;
+    --starlight: #e9d8fd;
+    --moon: #f3eeff;
+    --gold: #f0c060;
+    --gold-dim: #a07828;
+    --rose: #f472b6;
+    --teal: #5eead4;
+    --radius: 14px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--void);
+    color: var(--starlight);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 8%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 55% 30%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 72% 15%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 88% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 45% 70%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 65%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 92% 90%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 45%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 50% 50%, rgba(192,132,252,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 90%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 5%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: -20%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(ellipse, rgba(107,63,160,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: nebulaDrift 20s ease-in-out infinite alternate;
+  }
+  @keyframes nebulaDrift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(10%, 5%) scale(1.1); }
+  }
+  .quiz-wrap {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 60px;
+  }
+  .site-header {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0 20px;
+    gap: 6px;
+  }
+  .logo-symbol {
+    font-size: 36px;
+    animation: symbolPulse 4s ease-in-out infinite;
+  }
+  @keyframes symbolPulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); }
+  }
+  .logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--amethyst);
+    opacity: 0.8;
+  }
+  .progress-track {
+    width: 100%;
+    max-width: 520px;
+    margin: 24px 0 0;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(192,132,252,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .progress-bar-bg {
+    height: 2px;
+    background: rgba(107,63,160,0.2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--violet), var(--amethyst), var(--rose));
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+  .progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--amethyst);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--amethyst);
+  }
+  .question-card {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(20,15,45,0.7);
+    border: 1px solid rgba(107,63,160,0.25);
+    border-radius: 20px;
+    padding: 40px 36px;
+    margin-top: 28px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+      0 0 0 1px rgba(192,132,252,0.05),
+      0 24px 64px rgba(5,4,15,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(107,63,160,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .q-emoji { font-size: 28px; margin-bottom: 16px; display: block; }
+  .q-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--violet-bright);
+    margin-bottom: 12px;
+    opacity: 0.8;
+  }
+  .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 5vw, 26px);
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--moon);
+    margin-bottom: 28px;
+  }
+  .q-sub {
+    font-size: 13px;
+    color: rgba(192,132,252,0.55);
+    margin-top: -18px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .options-grid { display: grid; gap: 10px; }
+  .options-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .option-btn {
+    background: rgba(30,22,64,0.6);
+    border: 1px solid rgba(107,63,160,0.3);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    color: var(--starlight);
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(107,63,160,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.22s;
+  }
+  .option-btn:hover {
+    border-color: var(--violet-bright);
+    color: var(--moon);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(107,63,160,0.25);
+  }
+  .option-btn:hover::before { opacity: 1; }
+  .option-btn.selected {
+    background: rgba(107,63,160,0.25);
+    border-color: var(--amethyst);
+    color: var(--moon);
+    box-shadow: 0 0 0 1px rgba(192,132,252,0.3), 0 4px 20px rgba(107,63,160,0.3);
+  }
+  .option-btn.selected::before { opacity: 1; }
+  .option-icon { display: block; font-size: 20px; margin-bottom: 6px; }
+  .input-field {
+    width: 100%;
+    background: rgba(20,15,45,0.8);
+    border: 1px solid rgba(107,63,160,0.3);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    color: var(--moon);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .input-field::placeholder { color: rgba(192,132,252,0.3); }
+  .input-field:focus {
+    border-color: var(--amethyst);
+    box-shadow: 0 0 0 3px rgba(192,132,252,0.1);
+  }
+  .input-group { display: flex; flex-direction: column; gap: 12px; }
+  .input-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(192,132,252,0.5);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .input-hint {
+    font-size: 12px;
+    color: rgba(192,132,252,0.4);
+    margin-top: -4px;
+    line-height: 1.5;
+  }
+  .hora-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .hora-toggle {
+    background: rgba(30,22,64,0.6);
+    border: 1px solid rgba(107,63,160,0.3);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: rgba(192,132,252,0.7);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .hora-toggle:hover, .hora-toggle.active {
+    border-color: var(--amethyst);
+    color: var(--moon);
+    background: rgba(107,63,160,0.2);
+  }
+  .btn-next {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--violet) 0%, #8b2fc9 100%);
+    border: none;
+    border-radius: var(--radius);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-next::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(107,63,160,0.5); }
+  .btn-next:hover::after { opacity: 1; }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .result-teaser { text-align: center; padding: 10px 0 6px; }
+  .result-teaser-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--moon);
+    margin-bottom: 8px;
+  }
+  .result-teaser-sub {
+    font-size: 13px;
+    color: rgba(192,132,252,0.6);
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+  .result-bars { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; position: relative; }
+  .result-bar-row { display: flex; align-items: center; gap: 12px; }
+  .result-bar-label { font-size: 12px; color: rgba(192,132,252,0.6); width: 120px; text-align: right; flex-shrink: 0; }
+  .result-bar-track { flex: 1; height: 6px; background: rgba(107,63,160,0.15); border-radius: 99px; overflow: hidden; position: relative; }
+  .result-bar-fill { height: 100%; border-radius: 99px; position: relative; }
+  .result-bar-fill.blurred { filter: blur(3px); background: linear-gradient(90deg, var(--violet), var(--amethyst)); }
+  .result-lock-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(5,4,15,0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 20px;
+    gap: 8px;
+  }
+  .lock-icon { font-size: 28px; }
+  .lock-text { font-size: 13px; color: rgba(192,132,252,0.7); text-align: center; line-height: 1.5; }
+  .offer-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+  .offer-divider-line { flex: 1; height: 1px; background: rgba(107,63,160,0.2); }
+  .offer-divider-text { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(192,132,252,0.4); }
+  .offer-box {
+    background: linear-gradient(135deg, rgba(30,22,64,0.9), rgba(20,15,45,0.9));
+    border: 1px solid rgba(192,132,252,0.2);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 16px 0;
+  }
+  .offer-includes { display: flex; flex-direction: column; gap: 10px; margin: 16px 0 20px; }
+  .offer-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; color: rgba(233,216,253,0.85); line-height: 1.5; }
+  .offer-item-icon { flex-shrink: 0; font-size: 15px; }
+  .price-block { text-align: center; padding: 16px 0 8px; }
+  .price-from { font-size: 12px; color: rgba(192,132,252,0.4); text-decoration: line-through; margin-bottom: 2px; }
+  .price-main { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; color: var(--moon); line-height: 1; }
+  .price-period { font-size: 13px; color: rgba(192,132,252,0.5); margin-top: 4px; }
+  .btn-cta {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #7c3aed, #9b59d0, #c084fc);
+    border: none;
+    border-radius: var(--radius);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-top: 8px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+  .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(124,58,237,0.5); filter: brightness(1.08); }
+  .btn-order-bump {
+    background: rgba(30,22,64,0.8);
+    border: 1px solid rgba(192,132,252,0.25);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: left;
+  }
+  .btn-order-bump:hover { border-color: rgba(192,132,252,0.5); background: rgba(107,63,160,0.15); }
+  .bump-checkbox {
+    width: 18px; height: 18px;
+    border: 1px solid rgba(192,132,252,0.4);
+    border-radius: 4px;
+    background: rgba(20,15,45,0.8);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+    transition: all 0.2s;
+    font-size: 11px;
+    color: var(--amethyst);
+  }
+  .btn-order-bump.checked .bump-checkbox { background: rgba(107,63,160,0.5); border-color: var(--amethyst); }
+  .bump-text { font-size: 13px; color: rgba(233,216,253,0.8); line-height: 1.5; }
+  .bump-price { font-size: 12px; color: var(--gold); font-weight: 500; margin-top: 3px; }
+  .guarantee { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; font-size: 12px; color: rgba(192,132,252,0.5); }
+  .countdown-wrap {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin: 16px 0; padding: 12px 20px;
+    background: rgba(240,192,96,0.06);
+    border: 1px solid rgba(240,192,96,0.15);
+    border-radius: 10px;
+  }
+  .countdown-label { font-size: 11px; color: rgba(240,192,96,0.6); letter-spacing: 1px; }
+  .countdown-time { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold); letter-spacing: 2px; }
+  .question-card.fade-out { animation: fadeSlideOut 0.3s ease forwards; }
+  .question-card.fade-in { animation: fadeSlideIn 0.35s ease forwards; }
+  @keyframes fadeSlideOut { to { opacity: 0; transform: translateX(-24px); } }
+  @keyframes fadeSlideIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+  .social-strip {
+    max-width: 520px; width: 100%; margin-top: 20px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-size: 12px; color: rgba(192,132,252,0.4);
+  }
+  .social-dot { width: 4px; height: 4px; background: rgba(192,132,252,0.3); border-radius: 50%; }
+  @media (max-width: 480px) {
+    .question-card { padding: 28px 20px; }
+    .options-grid.cols-2 { grid-template-columns: 1fr; }
+    .result-bar-label { width: 90px; font-size: 11px; }
+  }
 </style>
 </head>
 <body>
-
-<div class="topbar">&#11088; Mais de <strong>3.847 mapas</strong> entregues &#8212; Entrega em at&#233; 10 minutos</div>
-
-<section class="intro" id="secIntro">
-  <span class="i-badge">&#127775; Mapa Astral + Numerologia Pessoal</span>
-  <h1 class="i-h1">Descubra o que os <span>astros revelam</span> sobre voc&#234;</h1>
-  <p class="i-sub">Em 8 perguntas r&#225;pidas, geramos seu Mapa Astral completo + Mapa Num&#233;rico personalizado &#8212; entregue no seu e-mail em at&#233; 10 minutos.</p>
-  <div class="i-provas">
-    <div class="i-pv"><strong>3.847</strong><span>Mapas entregues</span></div>
-    <div class="i-pv"><strong>4.9&#9733;</strong><span>Avalia&#231;&#227;o m&#233;dia</span></div>
-    <div class="i-pv"><strong>10min</strong><span>Tempo de entrega</span></div>
-  </div>
-  <button class="btn-start" id="btnStart">DESCOBRIR MINHA VIDA E PROP&#211;SITO &#9658;</button>
-  <p class="i-seguro">&#128274; 100% seguro e privado &#8226; Seus dados n&#227;o ser&#227;o compartilhados</p>
-</section>
-
-<section class="quiz-wrap" id="secQuiz">
-  <div class="quiz-box">
-
-    <!-- Q1: Nome -->
-    <div class="q-step" id="step1">
-      <p class="q-num">Pergunta 1 de 8</p>
-      <h2 class="q-text">Como voc&#234; gostaria de ser chamada?</h2>
-      <p class="q-sub">Usaremos seu primeiro nome no mapa personalizado.</p>
-      <div class="inp-group">
-        <label class="inp-label" for="inpNome">Seu primeiro nome</label>
-        <input class="inp-field" type="text" id="inpNome" placeholder="Ex: Ana, Juliana, Beatriz...">
-      </div>
-      <button class="btn-next" id="btnQ1">Continuar &#8594;</button>
+<div class="quiz-wrap">
+  <header class="site-header">
+    <div class="logo-symbol">🌌</div>
+    <div class="logo-name">Conexão Astral</div>
+  </header>
+  <div class="progress-track" id="progressTrack" style="display:none;">
+    <div class="progress-meta">
+      <span id="stepLabel">Pergunta 1 de 8</span>
+      <span id="pct">0%</span>
     </div>
-
-    <!-- Q2: Data de nascimento -->
-    <div class="q-step" id="step2">
-      <p class="q-num">Pergunta 2 de 8</p>
-      <h2 class="q-text">Qual sua data de nascimento?</h2>
-      <p class="q-sub">Essencial para calcular seu signo solar, ascendente e posic&#807;&#245;es planetarias.</p>
-      <div class="inp-group">
-        <label class="inp-label" for="inpData">Data de nascimento</label>
-        <input class="inp-field" type="date" id="inpData">
-      </div>
-      <button class="btn-next" id="btnQ2">Continuar &#8594;</button>
-    </div>
-
-    <!-- Q3: Hora -->
-    <div class="q-step" id="step3">
-      <p class="q-num">Pergunta 3 de 8</p>
-      <h2 class="q-text">Voc&#234; sabe sua hora de nascimento?</h2>
-      <p class="q-sub">A hora define seu Ascendente &#8212; muda a cada 2 horas. N&#227;o se preocupe se n&#227;o souber.</p>
-      <div class="opts" id="optsHora">
-        <div class="opt" data-val="sim">
-          <div class="opt-ico">&#128336;</div>
-          <div class="opt-txt"><strong>Sim, sei a hora exata</strong><span>Tenho certidao ou lembro</span></div>
-        </div>
-        <div class="opt" data-val="aprox">
-          <div class="opt-ico">&#128336;</div>
-          <div class="opt-txt"><strong>Sei aproximadamente</strong><span>Manha, tarde ou noite</span></div>
-        </div>
-        <div class="opt" data-val="nao">
-          <div class="opt-ico">&#10067;</div>
-          <div class="opt-txt"><strong>Nao sei a hora</strong><span>Tudo bem, usaremos meio-dia</span></div>
-        </div>
-      </div>
-      <div id="horaExataWrap" style="display:none;margin-top:20px">
-        <label class="inp-label" for="inpHora">Hora exata de nascimento</label>
-        <input class="inp-field" type="time" id="inpHora">
-      </div>
-      <button class="btn-next" id="btnQ3" style="display:none">Continuar &#8594;</button>
-    </div>
-
-    <!-- Q4: Cidade -->
-    <div class="q-step" id="step4">
-      <p class="q-num">Pergunta 4 de 8</p>
-      <h2 class="q-text">Em qual cidade voc&#234; nasceu?</h2>
-      <p class="q-sub">Define as 12 Casas do seu mapa &#8212; essencial para precis&#227;o astrol&#243;gica.</p>
-      <div class="inp-group">
-        <label class="inp-label" for="inpCidade">Cidade e estado/pa&#237;s</label>
-        <input class="inp-field" type="text" id="inpCidade" placeholder="Ex: Sao Paulo, SP &#8226; Rio de Janeiro, RJ">
-      </div>
-      <button class="btn-next" id="btnQ4">Continuar &#8594;</button>
-    </div>
-
-    <!-- Q5: Email -->
-    <div class="q-step" id="step5">
-      <p class="q-num">Pergunta 5 de 8</p>
-      <h2 class="q-text">Qual seu melhor e-mail?</h2>
-      <p class="q-sub">Seu mapa ser&#225; enviado para este endere&#231;o em at&#233; 10 minutos ap&#243;s o pagamento.</p>
-      <div class="inp-group">
-        <label class="inp-label" for="inpEmail">Seu e-mail</label>
-        <input class="inp-field" type="email" id="inpEmail" placeholder="voce@email.com">
-      </div>
-      <button class="btn-next" id="btnQ5">Continuar &#8594;</button>
-    </div>
-
-    <!-- Q6: Desafio -->
-    <div class="q-step" id="step6">
-      <p class="q-num">Pergunta 6 de 8</p>
-      <h2 class="q-text">Qual &#233; seu maior desafio agora?</h2>
-      <p class="q-sub">Isso personaliza a leitura das casas planetarias no seu mapa.</p>
-      <div class="opts" id="optsDesafio">
-        <div class="opt" data-val="amor">
-          <div class="opt-ico">&#10084;</div>
-          <div class="opt-txt"><strong>Amor e relacionamentos</strong><span>Encontrar ou manter o amor certo</span></div>
-        </div>
-        <div class="opt" data-val="proposito">
-          <div class="opt-ico">&#127775;</div>
-          <div class="opt-txt"><strong>Proposito e carreira</strong><span>Descobrir minha missao de vida</span></div>
-        </div>
-        <div class="opt" data-val="dinheiro">
-          <div class="opt-ico">&#128181;</div>
-          <div class="opt-txt"><strong>Financas e prosperidade</strong><span>Atrair abundancia e estabilidade</span></div>
-        </div>
-        <div class="opt" data-val="autoconhecimento">
-          <div class="opt-ico">&#129505;</div>
-          <div class="opt-txt"><strong>Autoconhecimento</strong><span>Entender quem eu realmente sou</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Q7: Crenca -->
-    <div class="q-step" id="step7">
-      <p class="q-num">Pergunta 7 de 8</p>
-      <h2 class="q-text">Como voc&#234; se relaciona com astrologia?</h2>
-      <p class="q-sub">N&#227;o existe resposta errada &#8212; isso adapta a linguagem do seu mapa.</p>
-      <div class="opts" id="optsCrencia">
-        <div class="opt" data-val="acredito">
-          <div class="opt-ico">&#127775;</div>
-          <div class="opt-txt"><strong>Acredito e sigo</strong><span>Faz parte da minha vida</span></div>
-        </div>
-        <div class="opt" data-val="curiosa">
-          <div class="opt-ico">&#128269;</div>
-          <div class="opt-txt"><strong>Sou curiosa</strong><span>Quero entender melhor</span></div>
-        </div>
-        <div class="opt" data-val="cetic">
-          <div class="opt-ico">&#129300;</div>
-          <div class="opt-txt"><strong>Sou cetic&#234;</strong><span>Mas estou aberta a descobrir</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Q8: Expectativa -->
-    <div class="q-step" id="step8">
-      <p class="q-num">Pergunta 8 de 8</p>
-      <h2 class="q-text">O que voc&#234; espera descobrir no seu mapa?</h2>
-      <p class="q-sub">&#218;ltima pergunta! Isso direciona os insights principais.</p>
-      <div class="opts" id="optsExpect">
-        <div class="opt" data-val="futuro">
-          <div class="opt-ico">&#128302;</div>
-          <div class="opt-txt"><strong>O que o futuro reserva</strong><span>Tendencias e ciclos importantes</span></div>
-        </div>
-        <div class="opt" data-val="personalidade">
-          <div class="opt-ico">&#129756;</div>
-          <div class="opt-txt"><strong>Minha personalidade profunda</strong><span>Talentos ocultos e padroes</span></div>
-        </div>
-        <div class="opt" data-val="relacionamento">
-          <div class="opt-ico">&#128149;</div>
-          <div class="opt-txt"><strong>Compatibilidade amorosa</strong><span>Quem e como amar melhor</span></div>
-        </div>
-        <div class="opt" data-val="missao">
-          <div class="opt-ico">&#10024;</div>
-          <div class="opt-txt"><strong>Minha missao de vida</strong><span>Proposito e caminho da alma</span></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section class="result-wrap" id="secResult">
-  <div class="result-box">
-    <div class="r-seal">&#127775;</div>
-    <div class="r-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-    <h2 class="r-h1">Seu Mapa Astral est&#225; <span style="color:var(--gold)">pronto para ser gerado!</span></h2>
-    <p class="r-sub">Com base nas suas respostas, identificamos configura&#231;&#245;es raras no seu mapa. Veja um resumo antes de receber o documento completo.</p>
-
-    <div class="r-card">
-      <p class="r-card-title">&#127775; Resumo do Seu Mapa</p>
-      <div class="r-item">
-        <span class="r-item-ico">&#128101;</span>
-        <div class="r-item-txt"><strong>Nome</strong><span id="rNome">&#8212;</span></div>
-      </div>
-      <div class="r-item">
-        <span class="r-item-ico">&#9728;</span>
-        <div class="r-item-txt"><strong>Data de Nascimento</strong><span id="rData">&#8212;</span></div>
-      </div>
-      <div class="r-item">
-        <span class="r-item-ico">&#127968;</span>
-        <div class="r-item-txt"><strong>Cidade Natal</strong><span id="rCidade">&#8212;</span></div>
-      </div>
-      <div class="r-item">
-        <span class="r-item-ico">&#128140;</span>
-        <div class="r-item-txt"><strong>Foco Principal</strong><span id="rDesafio">&#8212;</span></div>
-      </div>
-    </div>
-
-    <div class="r-preco">
-      <p class="r-preco-old">De R$ 197,00</p>
-      <p class="r-preco-new">R$ 47,90</p>
-      <p class="r-preco-note">Mapa Astral Completo + Mapa Num&#233;rico Pessoal &#8226; PDF por e-mail em 10 min</p>
-    </div>
-
-    <a class="btn-cta" id="btnCTA" href="LINK_CAKTO_47" target="_blank">&#9889; QUERO MEU MAPA AGORA &#8212; R$ 47,90</a>
-    <p class="r-garantia">&#128274; Pagamento 100% seguro &#8226; Garantia de 7 dias &#8226; Entrega imediata por e-mail</p>
-
-    <div style="margin-top:48px">
-      <p style="font-size:13px;color:#9B87B0;margin-bottom:20px;text-transform:uppercase;letter-spacing:.8px;font-weight:600">O que dizem nossas clientes</p>
-      <div class="r-testemunho">
-        <p class="r-test-txt">"Nunca tinha acreditado muito em astrologia, mas o mapa foi surpreendentemente preciso. Descreveu minha personalidade melhor do que qualquer teste que j&#225; fiz. Recomendo muito!"</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#C084FC);display:flex;align-items:center;justify-content:center;font-size:16px">&#128100;</div>
-          <div><p class="r-test-name">Camila R., 29 anos &#8212; S&#227;o Paulo</p><span class="stars-sm">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
-        </div>
-      </div>
-      <div class="r-testemunho">
-        <p class="r-test-txt">"Recebi em menos de 10 minutos! O documento &#233; lind&#237;ssimo e muito detalhado. Fiquei chocada com a precis&#227;o do meu Ascendente e do mapa num&#233;rico."</p>
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#C084FC,#F472B6);display:flex;align-items:center;justify-content:center;font-size:16px">&#128100;</div>
-          <div><p class="r-test-name">Fernanda M., 34 anos &#8212; Belo Horizonte</p><span class="stars-sm">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
-        </div>
-      </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
     </div>
   </div>
-</section>
-
-<div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
-<div class="prog-num" id="progNum">0/8</div>
-
-<script>
-var answers = {};
-var currentStep = 0;
-var totalSteps = 8;
-
-function showSection(id) {
-  document.getElementById("secIntro").style.display = "none";
-  document.getElementById("secQuiz").style.display = "none";
-  document.getElementById("secResult").style.display = "none";
-  var el = document.getElementById(id);
+  <div class="question-card fade-in" id="card"></div>
+  <div class="social-strip" id="socialStrip">
+    <span>🌟</span>
+    <span>52.847 análises entregues</span>
+    <div class="social-dot"></div>
+    <span>Entrega em até 10 min</span>
+    <div class="social-dot"></div>
+    <span>Garantia 7 dias</span>
+  </div>
+</div><script>
+const N8N_LEAD_WEBHOOK = 'https://juinfo.app.n8n.cloud/webhook/conexao-astral-lead';
+const CAKTO_BASE = 'https://pay.cakto.com.br/67mzr3r_889561';
+const state = {
+  step: 0,
+  answers: {},
+  leadSent: false,
+  bumpSelected: false,
+  countdownInterval: null,
+  countdownEnd: null
+};
+const QUESTIONS = [
+  {
+    id: 'intencao',
+    emoji: '✨',
+    label: 'O cosmos está ouvindo',
+    text: 'O que você mais quer que o universo revele sobre você agora?',
+    type: 'options',
+    options: [
+      { icon: '❤️', text: 'Amor e relacionamentos' },
+      { icon: '🌟', text: 'Propósito e missão de vida' },
+      { icon: '💡', text: 'Talentos e aptidões ocultos' },
+      { icon: '🔄', text: 'Ciclos kármicos e padrões' },
+    ]
+  },
+  {
+    id: 'misterio',
+    emoji: '🔮',
+    label: 'O que as estrelas guardam',
+    text: 'O que os astros ainda não revelaram para você?',
+    type: 'options',
+    options: [
+      { icon: '👫', text: 'Onde está minha alma gêmea' },
+      { icon: '💼', text: 'Qual é meu ramo com futuro' },
+      { icon: '🎁', text: 'Meus talentos não reconhecidos' },
+      { icon: '⚡', text: 'Meu karma e lições desta vida' },
+    ]
+  },
+  {
+    id: 'contato',
+    emoji: '🌙',
+    label: 'Para personalizar seu mapa',
+    text: 'Como devo te chamar?',
+    sub: 'Seu mapa será gerado com seu nome',
+    type: 'inputs',
+    fields: [
+      { id: 'nome', label: 'Seu nome', placeholder: 'Ex: Maria', type: 'text' },
+      { id: 'whatsapp', label: 'WhatsApp (para receber lembretes)', placeholder: '(11) 99999-9999', type: 'tel' },
+    ]
+  },
+  {
+    id: 'elemento',
+    emoji: '🌍',
+    label: 'Sua essência elementar',
+    text: 'Qual elemento ressoa com sua alma?',
+    type: 'options',
+    cols: 2,
+    options: [
+      { icon: '🔥', text: 'Fogo\nIntensidade e paixão' },
+      { icon: '💧', text: 'Água\nProfundidade e emoção' },
+      { icon: '🌬️', text: 'Ar\nLiberdade e ideias' },
+      { icon: '🌿', text: 'Terra\nEstabilidade e concretude' },
+    ]
+  },
+  {
+    id: 'nascimento',
+    emoji: '⭐',
+    label: 'O instante da sua chegada',
+    text: 'Quando você veio ao mundo?',
+    sub: 'Estes dados calculam seu mapa com precisão total',
+    type: 'birth'
+  },
+  {
+    id: 'conexao',
+    emoji: '💞',
+    label: 'Seu coração fala',
+    text: 'O que você mais busca em uma conexão de alma?',
+    type: 'options',
+    options: [
+      { icon: '🏠', text: 'Segurança e estabilidade' },
+      { icon: '🔥', text: 'Paixão e intensidade' },
+      { icon: '🌱', text: 'Crescimento mútuo' },
+      { icon: '🧘', text: 'Paz e compreensão profunda' },
+    ]
+  },
+  {
+    id: 'padroes',
+    emoji: '🪐',
+    label: 'O universo percebe',
+    text: 'Qual padrão se repete na sua vida que você quer entender?',
+    type: 'options',
+    options: [
+      { icon: '💔', text: 'Sempre atraio o mesmo tipo de pessoa' },
+      { icon: '🚧', text: 'Chego perto do sucesso e trava' },
+      { icon: '💸', text: 'Dinheiro entra mas não fica' },
+      { icon: '🔇', text: 'Não consigo expressar quem sou' },
+    ]
+  },
+  {
+    id: 'email',
+    emoji: '📬',
+    label: 'Quase lá',
+    text: 'Onde enviar sua análise completa?',
+    sub: 'Seu mapa PDF chega em até 10 minutos após a confirmação',
+    type: 'email_capture'
+  }
+];
+function renderStep() {
+  const card = document.getElementById('card');
+  const prog = document.getElementById('progressTrack');
+  const social = document.getElementById('socialStrip');
+  if (state.step >= QUESTIONS.length) { showResult(); return; }
+  const q = QUESTIONS[state.step];
+  const pct = Math.round((state.step / QUESTIONS.length) * 100);
+  prog.style.display = 'block';
+  document.getElementById('stepLabel').textContent = `Pergunta ${state.step + 1} de ${QUESTIONS.length}`;
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  social.style.display = state.step < 2 ? 'flex' : 'none';
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  let html = '';
+  if (q.emoji) html += `<span class="q-emoji">${q.emoji}</span>`;
+  if (q.label) html += `<div class="q-label">${q.label}</div>`;
+  html += `<div class="q-text">${q.text}</div>`;
+  if (q.sub) html += `<p class="q-sub">${q.sub}</p>`;
+  if (q.type === 'options') {
+    const gridClass = q.cols === 2 ? 'options-grid cols-2' : 'options-grid';
+    html += `<div class="${gridClass}">`;
+    q.options.forEach((opt, i) => {
+      const sel = state.answers[q.id] === i ? 'selected' : '';
+      const parts = opt.text.split('\n');
+      html += `<button class="option-btn ${sel}" onclick="selectOption('${q.id}', ${i}, this)">`;
+      if (opt.icon) html += `<span class="option-icon">${opt.icon}</span>`;
+      html += `<strong>${parts[0]}</strong>`;
+      if (parts[1]) html += `<br><span style="font-size:11px;opacity:0.6;">${parts[1]}</span>`;
+      html += `</button>`;
+    });
+    html += `</div>`;
+    html += `<button class="btn-next" id="btnNext" onclick="nextStep()" ${state.answers[q.id] === undefined ? 'disabled' : ''}>Continuar →</button>`;
+  }
+  else if (q.type === 'inputs') {
+    html += `<div class="input-group">`;
+    q.fields.forEach(f => {
+      html += `<div>
+        <label class="input-label">${f.label}</label>
+        <input class="input-field" id="f_${f.id}" type="${f.type}" placeholder="${f.placeholder}"
+          value="${state.answers[f.id] || ''}"
+          oninput="handleInput('${f.id}')" />
+      </div>`;
+    });
+    html += `</div>`;
+    html += `<button class="btn-next" id="btnNext" onclick="nextStep()" style="margin-top:20px;">Continuar →</button>`;
+  }
+  else if (q.type === 'birth') {
+    const savedHora = state.answers['hora_tipo'] || '';
+    html += `<div class="input-group">
+      <div>
+        <label class="input-label">Data de nascimento</label>
+        <input class="input-field" id="f_data_nascimento" type="text" placeholder="DD/MM/AAAA"
+          value="${state.answers['data_nascimento'] || ''}"
+          oninput="handleInput('data_nascimento')" maxlength="10" />
+      </div>
+      <div>
+        <label class="input-label">Cidade de nascimento</label>
+        <input class="input-field" id="f_cidade_nascimento" type="text" placeholder="Ex: São Paulo, SP"
+          value="${state.answers['cidade_nascimento'] || ''}"
+          oninput="handleInput('cidade_nascimento')" />
+      </div>
+      <div>
+        <label class="input-label">Horário de nascimento</label>
+        <div class="hora-group">
+          <button class="hora-toggle ${savedHora === 'sei' ? 'active' : ''}" onclick="setHoraTipo('sei')">Sei o horário</button>
+          <button class="hora-toggle ${savedHora === 'aprox' ? 'active' : ''}" onclick="setHoraTipo('aprox')">Aproximado</button>
+          <button class="hora-toggle ${savedHora === 'nao' ? 'active' : ''}" onclick="setHoraTipo('nao')">Não sei</button>
+          <button class="hora-toggle ${savedHora === 'certidao' ? 'active' : ''}" onclick="setHoraTipo('certidao')">Ver certidão</button>
+        </div>
+        <div id="horaInputWrap" style="margin-top:8px;display:${savedHora === 'sei' || savedHora === 'aprox' ? 'block' : 'none'}">
+          <input class="input-field" id="f_hora_nascimento" type="text" placeholder="Ex: 14:30"
+            value="${state.answers['hora_nascimento'] || ''}"
+            oninput="handleInput('hora_nascimento')" maxlength="5" />
+          ${savedHora === 'aprox' ? '<p class="input-hint" style="margin-top:6px;">Tudo bem — usaremos para refinar o Ascendente</p>' : ''}
+        </div>
+        ${savedHora === 'nao' ? '<p class="input-hint" style="margin-top:6px;">Sem problema! Seu mapa será gerado com as informações disponíveis.</p>' : ''}
+      </div>
+    </div>`;
+    html += `<button class="btn-next" id="btnNext" onclick="nextStep()" style="margin-top:20px;">Continuar →</button>`;
+  }
+  else if (q.type === 'email_capture') {
+    html += `<div class="input-group">
+      <div>
+        <input class="input-field" id="f_email" type="email" placeholder="seu@email.com"
+          value="${state.answers['email'] || ''}"
+          oninput="handleInput('email')" />
+        <p class="input-hint" style="margin-top:8px;">Seu PDF é entregue neste endereço em até 10 minutos</p>
+      </div>
+    </div>`;
+    html += `<button class="btn-next" id="btnNext" onclick="goToResult()" style="margin-top:20px;">Ver meu resultado →</button>`;
+  }
+  card.innerHTML = html;
+  card.classList.add('fade-in');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function selectOption(qId, idx, el) {
+  state.answers[qId] = idx;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn = document.getElementById('btnNext');
+  if (btn) btn.disabled = false;
+}
+function handleInput(fieldId) {
+  const el = document.getElementById('f_' + fieldId);
   if (el) {
-    el.style.display = "flex";
-  }
-}
-
-function updateProgress(step) {
-  var pct = Math.round((step / totalSteps) * 100);
-  document.getElementById("progBar").style.width = pct + "%";
-  document.getElementById("progNum").textContent = step + "/" + totalSteps;
-  document.getElementById("progWrap").style.display = "block";
-  document.getElementById("progNum").style.display = "block";
-}
-
-function goStep(n) {
-  var steps = document.querySelectorAll(".q-step");
-  steps.forEach(function(s) { s.classList.remove("active"); });
-  var target = document.getElementById("step" + n);
-  if (target) {
-    target.classList.add("active");
-    currentStep = n;
-    updateProgress(n - 1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-}
-
-function startQuiz() {
-  showSection("secQuiz");
-  document.getElementById("secQuiz").style.display = "flex";
-  goStep(1);
-  updateProgress(0);
-}
-
-function showResult() {
-  document.getElementById("progWrap").style.display = "none";
-  document.getElementById("progNum").style.display = "none";
-  showSection("secResult");
-  document.getElementById("secResult").style.display = "flex";
-
-  var nome = answers.nome || "";
-  var data = answers.data || "";
-  var cidade = answers.cidade || "";
-  var desafio = answers.desafio || "";
-
-  document.getElementById("rNome").textContent = nome;
-
-  if (data) {
-    var parts = data.split("-");
-    if (parts.length === 3) {
-      document.getElementById("rData").textContent = parts[2] + "/" + parts[1] + "/" + parts[0];
-    } else {
-      document.getElementById("rData").textContent = data;
+    let val = el.value;
+    if (fieldId === 'data_nascimento') {
+      val = val.replace(/\D/g,'');
+      if (val.length > 2) val = val.slice(0,2) + '/' + val.slice(2);
+      if (val.length > 5) val = val.slice(0,5) + '/' + val.slice(5);
+      if (val.length > 10) val = val.slice(0,10);
+      el.value = val;
     }
-  }
-
-  document.getElementById("rCidade").textContent = cidade;
-
-  var desafioMap = {
-    "amor": "Amor e relacionamentos",
-    "proposito": "Proposito e carreira",
-    "dinheiro": "Financas e prosperidade",
-    "autoconhecimento": "Autoconhecimento"
-  };
-  document.getElementById("rDesafio").textContent = desafioMap[desafio] || desafio;
-
-  var email = answers.email || "";
-  var cta = document.getElementById("btnCTA");
-  var base = "LINK_CAKTO_47";
-  if (email) {
-    cta.href = base + "?email=" + encodeURIComponent(email) + "&nome=" + encodeURIComponent(nome);
-  } else {
-    cta.href = base;
+    if (fieldId === 'hora_nascimento') {
+      val = val.replace(/\D/g,'');
+      if (val.length > 2) val = val.slice(0,2) + ':' + val.slice(2);
+      if (val.length > 5) val = val.slice(0,5);
+      el.value = val;
+    }
+    state.answers[fieldId] = el.value;
   }
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  var btnStart = document.getElementById("btnStart");
-  if (btnStart) {
-    btnStart.addEventListener("click", startQuiz);
-  }
-
-  var btnQ1 = document.getElementById("btnQ1");
-  if (btnQ1) {
-    btnQ1.addEventListener("click", function() {
-      var val = document.getElementById("inpNome").value.trim();
-      if (!val) {
-        alert("Por favor, informe seu nome.");
-        return;
-      }
-      answers.nome = val;
-      goStep(2);
+function setHoraTipo(tipo) {
+  state.answers['hora_tipo'] = tipo;
+  renderStep();
+}
+function nextStep() {
+  const q = QUESTIONS[state.step];
+  if (q.type === 'inputs') {
+    q.fields.forEach(f => {
+      const el = document.getElementById('f_' + f.id);
+      if (el) state.answers[f.id] = el.value.trim();
     });
   }
-
-  var btnQ2 = document.getElementById("btnQ2");
-  if (btnQ2) {
-    btnQ2.addEventListener("click", function() {
-      var val = document.getElementById("inpData").value;
-      if (!val) {
-        alert("Por favor, informe sua data de nascimento.");
-        return;
-      }
-      answers.data = val;
-      goStep(3);
+  if (q.type === 'birth') {
+    ['data_nascimento','cidade_nascimento','hora_nascimento'].forEach(fid => {
+      const el = document.getElementById('f_' + fid);
+      if (el) state.answers[fid] = el.value.trim();
     });
   }
-
-  var optsHora = document.querySelectorAll("#optsHora .opt");
-  optsHora.forEach(function(opt) {
-    opt.addEventListener("click", function() {
-      optsHora.forEach(function(o) { o.classList.remove("selected"); });
-      opt.classList.add("selected");
-      var val = opt.getAttribute("data-val");
-      answers.horaConhecimento = val;
-      if (val === "sim") {
-        document.getElementById("horaExataWrap").style.display = "block";
-        document.getElementById("btnQ3").style.display = "inline-flex";
-      } else if (val === "aprox") {
-        document.getElementById("horaExataWrap").style.display = "block";
-        document.getElementById("btnQ3").style.display = "inline-flex";
-      } else {
-        document.getElementById("horaExataWrap").style.display = "none";
-        answers.hora = "12:00";
-        document.getElementById("btnQ3").style.display = "inline-flex";
-      }
-    });
-  });
-
-  var btnQ3 = document.getElementById("btnQ3");
-  if (btnQ3) {
-    btnQ3.addEventListener("click", function() {
-      var horaInp = document.getElementById("inpHora").value;
-      if (horaInp) {
-        answers.hora = horaInp;
-      } else if (!answers.hora) {
-        answers.hora = "12:00";
-      }
-      goStep(4);
-    });
+  if (state.step === 2 && !state.leadSent && state.answers['nome'] && state.answers['whatsapp']) {
+    sendLeadWebhook(false);
   }
-
-  var btnQ4 = document.getElementById("btnQ4");
-  if (btnQ4) {
-    btnQ4.addEventListener("click", function() {
-      var val = document.getElementById("inpCidade").value.trim();
-      if (!val) {
-        alert("Por favor, informe sua cidade de nascimento.");
-        return;
-      }
-      answers.cidade = val;
-      goStep(5);
-    });
+  const card = document.getElementById('card');
+  card.classList.add('fade-out');
+  setTimeout(() => { state.step++; renderStep(); }, 280);
+}
+function goToResult() {
+  const el = document.getElementById('f_email');
+  if (el) state.answers['email'] = el.value.trim();
+  if (!state.answers['email'] || !state.answers['email'].includes('@')) {
+    el.style.borderColor = 'rgba(244,114,182,0.6)';
+    el.focus();
+    return;
   }
-
-  var btnQ5 = document.getElementById("btnQ5");
-  if (btnQ5) {
-    btnQ5.addEventListener("click", function() {
-      var val = document.getElementById("inpEmail").value.trim();
-      if (!val || val.indexOf("@") === -1) {
-        alert("Por favor, informe um e-mail valido.");
-        return;
-      }
-      answers.email = val;
-      goStep(6);
+  sendLeadWebhook(false);
+  const card = document.getElementById('card');
+  card.classList.add('fade-out');
+  setTimeout(() => { state.step = QUESTIONS.length; renderStep(); }, 280);
+}
+function sendLeadWebhook(comprou) {
+  state.leadSent = true;
+  const payload = {
+    nome: state.answers['nome'] || '',
+    email: state.answers['email'] || '',
+    whatsapp: state.answers['whatsapp'] || '',
+    data_nascimento: state.answers['data_nascimento'] || '',
+    hora_nascimento: state.answers['hora_nascimento'] || '',
+    cidade_nascimento: state.answers['cidade_nascimento'] || '',
+    signo: calcularSigno(state.answers['data_nascimento'] || ''),
+    intencao: state.answers['intencao'],
+    elemento: state.answers['elemento'],
+    comprou: comprou
+  };
+  try {
+    fetch(N8N_LEAD_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
     });
+  } catch(e) {}
+}
+function calcularSigno(dataStr) {
+  if (!dataStr) return '';
+  const p = dataStr.split('/');
+  if (p.length < 2) return '';
+  const dia = parseInt(p[0]), mes = parseInt(p[1]);
+  const s = [
+    {n:'Áries',r:[[3,21],[4,19]]},{n:'Touro',r:[[4,20],[5,20]]},{n:'Gêmeos',r:[[5,21],[6,20]]},
+    {n:'Câncer',r:[[6,21],[7,22]]},{n:'Leão',r:[[7,23],[8,22]]},{n:'Virgem',r:[[8,23],[9,22]]},
+    {n:'Libra',r:[[9,23],[10,22]]},{n:'Escorpião',r:[[10,23],[11,21]]},{n:'Sagitário',r:[[11,22],[12,21]]},
+    {n:'Capricórnio',r:[[12,22],[1,19]]},{n:'Aquário',r:[[1,20],[2,18]]},{n:'Peixes',r:[[2,19],[3,20]]}
+  ];
+  for (const sg of s) {
+    const [[mi,di],[mf,df]] = sg.r;
+    if ((mes===mi&&dia>=di)||(mes===mf&&dia<=df)) return sg.n;
   }
-
-  var optsDesafio = document.querySelectorAll("#optsDesafio .opt");
-  optsDesafio.forEach(function(opt) {
-    opt.addEventListener("click", function() {
-      optsDesafio.forEach(function(o) { o.classList.remove("selected"); });
-      opt.classList.add("selected");
-      answers.desafio = opt.getAttribute("data-val");
-      setTimeout(function() { goStep(7); }, 400);
-    });
-  });
-
-  var optsCrencia = document.querySelectorAll("#optsCrencia .opt");
-  optsCrencia.forEach(function(opt) {
-    opt.addEventListener("click", function() {
-      optsCrencia.forEach(function(o) { o.classList.remove("selected"); });
-      opt.classList.add("selected");
-      answers.crenca = opt.getAttribute("data-val");
-      setTimeout(function() { goStep(8); }, 400);
-    });
-  });
-
-  var optsExpect = document.querySelectorAll("#optsExpect .opt");
-  optsExpect.forEach(function(opt) {
-    opt.addEventListener("click", function() {
-      optsExpect.forEach(function(o) { o.classList.remove("selected"); });
-      opt.classList.add("selected");
-      answers.expectativa = opt.getAttribute("data-val");
-      updateProgress(8);
-      setTimeout(function() { showResult(); }, 600);
-    });
-  });
-
-});
+  return 'Capricórnio';
+}
+function showResult() {
+  const card = document.getElementById('card');
+  document.getElementById('progressTrack').style.display = 'none';
+  document.getElementById('socialStrip').style.display = 'none';
+  const nome = state.answers['nome'] || 'você';
+  const primeiroNome = nome.split(' ')[0];
+  const signo = calcularSigno(state.answers['data_nascimento'] || '');
+  state.countdownEnd = Date.now() + (14 * 60 + 59) * 1000;
+  startCountdown();
+  card.classList.remove('fade-out');
+  void card.offsetWidth;
+  card.innerHTML = `
+    <div class="result-teaser">
+      <span class="q-emoji">🌌</span>
+      <div class="q-label">Análise em processamento</div>
+      <h2 class="result-teaser-title">${primeiroNome}, seu mapa está quase pronto</h2>
+      <p class="result-teaser-sub">Encontramos padrões únicos na sua carta ${signo ? `de <strong style="color:var(--amethyst)">${signo}</strong>` : 'astral'}. Para revelar o resultado completo, precisamos de apenas mais um passo.</p>
+      <div class="result-bars" style="position:relative;">
+        <div class="result-bar-row"><div class="result-bar-label">Propósito de alma</div><div class="result-bar-track"><div class="result-bar-fill blurred" style="width:78%"></div></div></div>
+        <div class="result-bar-row"><div class="result-bar-label">Padrões de amor</div><div class="result-bar-track"><div class="result-bar-fill blurred" style="width:91%"></div></div></div>
+        <div class="result-bar-row"><div class="result-bar-label">Bloqueios karma</div><div class="result-bar-track"><div class="result-bar-fill blurred" style="width:64%"></div></div></div>
+        <div class="result-bar-row"><div class="result-bar-label">Número de vida</div><div class="result-bar-track"><div class="result-bar-fill blurred" style="width:100%"></div></div></div>
+        <div class="result-lock-overlay">
+          <span class="lock-icon">🔒</span>
+          <span class="lock-text">Análise completa disponível após a confirmação</span>
+        </div>
+      </div>
+    </div>
+    <div class="offer-divider"><div class="offer-divider-line"></div><span class="offer-divider-text">Oferta especial</span><div class="offer-divider-line"></div></div>
+    <div class="countdown-wrap">
+      <span class="countdown-label">⏳ Esta análise expira em</span>
+      <span class="countdown-time" id="countdownDisplay">14:59</span>
+    </div>
+    <div class="offer-box">
+      <div class="q-label" style="margin-bottom:10px;">O que você recebe</div>
+      <div class="offer-includes">
+        <div class="offer-item"><span class="offer-item-icon">☀️</span> Mapa Astral Completo — Sol, Lua, Ascendente e todos os planetas interpretados</div>
+        <div class="offer-item"><span class="offer-item-icon">🔢</span> Numerologia completa — Número de Vida, Alma, Expressão e Ano Pessoal</div>
+        <div class="offer-item"><span class="offer-item-icon">❤️</span> Padrões de amor — por que você atrai quem atrai e como mudar</div>
+        <div class="offer-item"><span class="offer-item-icon">💼</span> Ramos com mais futuro para o seu perfil cósmico</div>
+        <div class="offer-item"><span class="offer-item-icon">🔮</span> Previsão dos próximos 12 meses (trânsitos 2025–2026)</div>
+        <div class="offer-item"><span class="offer-item-icon">📄</span> PDF de 40+ páginas entregue em até 10 minutos</div>
+      </div>
+      <div class="price-block">
+        <div class="price-from">De R$497,70</div>
+        <div class="price-main">R$47,90</div>
+        <div class="price-period">pagamento único · Pix, cartão 3x ou boleto</div>
+      </div>
+    </div>
+    <button class="btn-order-bump" id="bumpBtn" onclick="toggleBump()">
+      <div class="bump-checkbox" id="bumpCheck"></div>
+      <div>
+        <div class="bump-text">💕 Adicionar <strong>Mapa de Compatibilidade Amorosa</strong> — análise completa com outra pessoa</div>
+        <div class="bump-price">Apenas +R$17,90 • entregue junto ao seu mapa</div>
+      </div>
+    </button>
+    <a id="ctaBtn" href="${CAKTO_BASE}" class="btn-cta" onclick="onCTAClick()">
+      🔮 Quero meu Mapa Astral + Numerologia — R$47,90
+    </a>
+    <div class="guarantee">🛡 7 dias de garantia · Pagamento 100% seguro</div>
+  `;
+  card.classList.add('fade-in');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleBump() {
+  state.bumpSelected = !state.bumpSelected;
+  const btn = document.getElementById('bumpBtn');
+  const check = document.getElementById('bumpCheck');
+  const cta = document.getElementById('ctaBtn');
+  if (state.bumpSelected) {
+    btn.classList.add('checked');
+    check.textContent = '✓';
+    cta.textContent = '🔮 Mapa Astral + Compatibilidade — R$65,80';
+  } else {
+    btn.classList.remove('checked');
+    check.textContent = '';
+    cta.textContent = '🔮 Quero meu Mapa Astral + Numerologia — R$47,90';
+  }
+}
+function onCTAClick() { sendLeadWebhook(false); }
+function startCountdown() {
+  if (state.countdownInterval) clearInterval(state.countdownInterval);
+  state.countdownInterval = setInterval(() => {
+    const rem = Math.max(0, state.countdownEnd - Date.now());
+    const m = Math.floor(rem / 60000);
+    const s = Math.floor((rem % 60000) / 1000);
+    const el = document.getElementById('countdownDisplay');
+    if (el) el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (rem === 0) clearInterval(state.countdownInterval);
+  }, 1000);
+}
+renderStep();
 </script>
 </body>
 </html>
